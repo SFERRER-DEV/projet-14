@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Formulaire */
+.formData[data-error]::after,
+.formData[data-message]::before {
+  font-size: 0.85em;
+  display: block;
+  margin: 0.25em;
+  line-height: 1em;
+  opacity: 0;
+}
+/*  Montrer erreur de validation >>> */
+.formData[data-error]::after {
+  content: attr(data-error);
+  text-align: right;
+  color: #e54858;
+}
+.formData[data-error-visible='true']::after {
+  opacity: 1;
+}
+.formData[data-error-visible='true'] .text-control {
+  border: 2px solid #e54858;
+}
+.formData[data-error-visible='false']::after {
+  opacity: 0;
+}
+.formData[data-error-visible='false'] .text-control {
+  border: none;
+}
+/* <<<  Montrer erreur de validation */
+/*  Montrer message informatif >>> */
+.formData[data-message]::before {
+  content: attr(data-message);
+  text-align: left;
+  color: #42b983;
+}
+.formData[data-message-visible='true']::before {
+  opacity: 1;
+}
+.formData[data-message-visible='false']::before {
+  opacity: 0;
+}
+/* <<< Montrer message informatif */
