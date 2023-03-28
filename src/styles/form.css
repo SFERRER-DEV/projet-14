@@ -30,13 +30,15 @@ code {
 .formData[data-error-visible='true']::after {
   opacity: 1;
 }
+.formData[data-error-visible='true'] .list-control,
 .formData[data-error-visible='true'] .text-control {
   border: 2px solid #e54858;
 }
 .formData[data-error-visible='false']::after {
   opacity: 0;
 }
-.formData[data-error-visible='false'] .text-control {
+.formData[data-error-visible='false'] .list-control,
+.formData[data-error-visible='true'] .text-control {
   border: none;
 }
 /* <<<  Montrer erreur de validation */

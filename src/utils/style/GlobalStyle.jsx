@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import colors from './colors';
 
 const StyledGlobalStyle = createGlobalStyle`
     * {
@@ -18,10 +19,6 @@ const StyledGlobalStyle = createGlobalStyle`
         font-size: 0.85rem;
       }
       border: 3px blue dotted;
-    }
-
-    main section {
-      border: 1px red dotted;
     }
 `;
 
