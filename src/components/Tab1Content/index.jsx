@@ -1,11 +1,11 @@
 import React from 'react';
-import FormCreate from '../FormCreate';
+import Form from '../Form';
 
 function Tab1Content() {
   return (
     <React.Fragment>
       <h2>New Employee</h2>
-      <FormCreate />
+      <Form />
     </React.Fragment>
   );
 }

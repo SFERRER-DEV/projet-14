@@ -2,64 +2,23 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { DropdownList } from 'basic-dropdown-list';
 import { FieldSet } from '../../utils/style/Atoms';
-import checkValidity, { getFields, noBubbleMessage } from '../../utils/form';
-import '../../styles/form.css';
-
-/** @type {Object} Le formulaire est une balise `<form>` */
-const Form = styled.form`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #000;
-  background-color: #fff;
-  @media (max-width: 767px) {
-    font-size: 0.85rem;
-  }
-`;
+import '../../styles/index.css';
 
 const SaveButton = styled.button`
-  font-size: 1.25rem;
-  font-weight: bold;
-  text-decoration: none;
-  color: #fff;
-  background-color: #4caf50;
-  border: none;
-  border-radius: 0.25rem;
-  padding: 0.75rem 1.5rem;
-  margin: 0.5rem 1rem;
   margin-left: auto;
-  transition: background-color 0.3s ease;
-  &:hover {
-    background-color: #2e8b57;
-  }
-  cursor: pointer;
 `;
 
-/**
- *
- * @param {*} e
- */
-const saveUser = (e) => {
-  // Rester sur le formulaire
-  e.preventDefault();
-  console.log('Save');
-};
-
-function FormCreate() {
+function Form() {
   /**
    * Références vers les élément du DOM
    */
-  const inputFirstname = useRef();
-  const inputLastname = useRef();
-  const inputStreet = useRef();
-  const inputCity = useRef();
-  const inputZipCode = useRef();
-  const inputStartDate = useRef();
+  const refForm = useRef();
+  const refFirstname = useRef();
+  const refLastname = useRef();
+  const refStreet = useRef();
+  const refCity = useRef();
+  const refZipCode = useRef();
+  const refStartDate = useRef();
 
   /**
    * Déclare une variable d'état 'federal' pour les états américains et une fonction de mise à jour 'setFederal'
@@ -98,24 +57,50 @@ function FormCreate() {
     setSelectedDepartment(newState);
   };
 
-  /**
-   *
-   */
-  useEffect(() => {
-    /**
-     * @type {NodeList} fields
-     * @description La NodeList des éléments DOM à contrôler.
-     */
-    const fields = getFields(document);
-    // Empêcher l'affichage des infobulles de l'api HTML
-    //noBubbleMessage(fields);
-  }, []);
+  const handleValidate = (event, ref) => {
+    console.log(event.type);
+    event.preventDefault();
+
+    const formData = ref.current.parentNode;
+    if (
+      formData === null ||
+      formData === undefined ||
+      !formData.classList.contains('formData')
+    ) {
+      return;
+    }
+
+    if (ref.current.validity.valid) {
+      formData.setAttribute('data-error-visible', 'false');
+      formData.setAttribute('data-error', '');
+    } else {
+      formData.setAttribute('data-error-visible', 'true');
+      formData.setAttribute('data-error', ref.current.validationMessage);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    // Rester sur le formulaire
+    e.preventDefault();
+    if (refForm.current.checkValidity()) {
+      // ✅
+      console.log('Save User');
+    } else {
+      // 👎
+      // refFirstname.current.parentNode.setAttribute('data-error-visible', true);
+      // refLastname.current.parentNode.setAttribute('data-error-visible', true);
+      // refStreet.current.parentNode.setAttribute('data-error-visible', true);
+      // refCity.current.parentNode.setAttribute('data-error-visible', true);
+      // refZipCode.current.parentNode.setAttribute('data-error-visible', true);
+      // refStartDate.current.parentNode.setAttribute('data-error-visible', true);
+    }
+  };
 
   return (
-    <Form onSubmit={(e) => saveUser(e)}>
-      {/* Informations */}
+    <form ref={refForm} onSubmit={(e) => handleSubmit(e)}>
+      {/* Civilité */}
       <FieldSet>
-        <legend>Personal</legend>
+        <legend>Employee</legend>
         <div className="input-wrapper formData">
           <label htmlFor="firstname">Firstname</label>
           <input
@@ -124,7 +109,10 @@ function FormCreate() {
             required
             className="text-control"
             minLength="2"
-            ref={inputFirstname}
+            ref={refFirstname}
+            onBlur={(event) => handleValidate(event, refFirstname)}
+            onInvalid={(event) => handleValidate(event, refFirstname)}
+            onInput={(event) => handleValidate(event, refFirstname)}
           />
         </div>
         <div className="input-wrapper formData">
@@ -135,7 +123,10 @@ function FormCreate() {
             required
             className="text-control"
             minLength="2"
-            ref={inputLastname}
+            ref={refLastname}
+            onBlur={(event) => handleValidate(event, refLastname)}
+            onInvalid={(event) => handleValidate(event, refLastname)}
+            onInput={(event) => handleValidate(event, refLastname)}
           />
         </div>
       </FieldSet>
@@ -150,7 +141,10 @@ function FormCreate() {
             required
             className="text-control"
             minLength="2"
-            ref={inputStreet}
+            ref={refStreet}
+            onBlur={(event) => handleValidate(event, refStreet)}
+            onInvalid={(event) => handleValidate(event, refStreet)}
+            onInput={(event) => handleValidate(event, refStreet)}
           />
         </div>
         <div className="input-wrapper formData">
@@ -161,7 +155,10 @@ function FormCreate() {
             required
             className="text-control"
             minLength="2"
-            ref={inputCity}
+            ref={refCity}
+            onBlur={(event) => handleValidate(event, refCity)}
+            onInvalid={(event) => handleValidate(event, refCity)}
+            onInput={(event) => handleValidate(event, refCity)}
           />
         </div>
         <DropdownList
@@ -174,14 +171,17 @@ function FormCreate() {
           selectedValue={selectedFederal}
         />
         <div className="input-wrapper formData">
-          <label htmlFor="Zip Code">City</label>
+          <label htmlFor="zipcode">Zip Code</label>
           <input
             type="text"
             id="zipcode"
             required
             className="text-control"
             minLength="2"
-            ref={inputZipCode}
+            ref={refZipCode}
+            onBlur={(event) => handleValidate(event, refZipCode)}
+            onInvalid={(event) => handleValidate(event, refZipCode)}
+            onInput={(event) => handleValidate(event, refZipCode)}
           />
         </div>
       </FieldSet>
@@ -196,7 +196,10 @@ function FormCreate() {
             required
             className="text-control"
             minLength="2"
-            ref={inputStartDate}
+            ref={refStartDate}
+            onBlur={(event) => handleValidate(event, refStartDate)}
+            onInvalid={(event) => handleValidate(event, refStartDate)}
+            onInput={(event) => handleValidate(event, refStartDate)}
           />
         </div>
         <DropdownList
@@ -209,8 +212,8 @@ function FormCreate() {
         />
       </FieldSet>
       <SaveButton type="submit">Save</SaveButton>
-    </Form>
+    </form>
   );
 }
 
-export default FormCreate;
+export default Form;

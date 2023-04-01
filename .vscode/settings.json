@@ -1,5 +1,6 @@
 {
-	"jest.autoRun": "off",
-	"prettier.requireConfig": true,
-	"javascript.suggest.completeJSDocs": true
+  "jest.autoRun": "off",
+  "prettier.requireConfig": true,
+  "javascript.suggest.completeJSDocs": true,
+  "editor.renderWhitespace": "all"
 }
