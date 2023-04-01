@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+#
+/.vscode/chrome
+/.vscode/edge
+
 # testing
 /coverage
 
