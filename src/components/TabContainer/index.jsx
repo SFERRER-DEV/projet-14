@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Tab1Content from '../Tab1Content';
 import Tab2Content from '../Tab2Content';
+import { EmployeesProvider } from '../../utils/context';
 
 const TabsContainer = styled.main`
   display: flex;
@@ -58,14 +59,16 @@ function TabContainer() {
           View current Employees
         </TabButton>
       </TabButtonsContainer>
-      <TabContent active={activeTab === 1}>
-        {/** Contenu de l'onglet 1 */}
-        <Tab1Content />
-      </TabContent>
-      <TabContent active={activeTab === 2}>
-        {/** Contenu de l'onglet 2 */}
-        <Tab2Content />
-      </TabContent>
+      <EmployeesProvider>
+        <TabContent active={activeTab === 1}>
+          {/** Contenu de l'onglet 1 */}
+          <Tab1Content />
+        </TabContent>
+        <TabContent active={activeTab === 2}>
+          {/** Contenu de l'onglet 2 */}
+          <Tab2Content />
+        </TabContent>
+      </EmployeesProvider>
     </TabsContainer>
   );
 }

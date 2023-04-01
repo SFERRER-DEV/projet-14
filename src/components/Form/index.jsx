@@ -1,25 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { DropdownList } from 'basic-dropdown-list';
 import { FieldSet } from '../../utils/style/Atoms';
-import '../../styles/index.css';
-
+import { EmployeesContext } from '../../utils/context';
 const SaveButton = styled.button`
   margin-left: auto;
 `;
 
 function Form() {
-  const today = new Date().toISOString().split('T')[0];
-  const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
-    street: '',
-    city: '',
-    federal: '',
-    zipcode: '',
-    startDate: today,
-    department: '',
-  });
+  /**
+   * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
+   * qui peut être utilisée pour mettre à jour la variable d'état "formData".
+   * @typedef {FormData} formData - Un objet à destructurer contenant l'état actuel de formData
+   * @typedef {Function} setFormData - Cette fonction met à jour le State de données du formulaire
+   */
+  const { formData, setFormData } = useContext(EmployeesContext);
 
   /**
    * Références vers les élément du DOM
@@ -33,14 +28,20 @@ function Form() {
   const refStartDate = useRef();
 
   /**
-   * Déclare une variable d'état 'federal' pour les états américains et une fonction de mise à jour 'setFederal'
+   * Déclare une variable d'état 'federal' pour la lisre des états féderaux et une fonction de mise à jour 'setFederal'
    * @typedef {Array.<Object>} federal - Cette variable de State contient la liste des états fédéraux américains
    * @typedef {Function} setFederal - Cette fonction met à jour le State local
    */
-  const [federal, setFederal] = useState([{}]);
+  const { federal, setFederal } = useContext(EmployeesContext);
   const handleFederalChange = (newState) => {
     setFederal(newState);
   };
+
+  /**
+   *État d'un élément sélectionné, avec une fonction pour mettre à jour l'état.
+   * @typedef {string} selectedFederal - La valeur actuelle de l'élément sélectionné dans la liste.
+   * @typedef {function} setSelectedFederal - Une fonction pour mettre à jour l'état fédéral choisi.
+   */
   const [selectedFederal, setSelectedFederal] = useState('');
   const handleSelectedFederalChange = (newState) => {
     setSelectedFederal(newState);
@@ -48,15 +49,20 @@ function Form() {
   };
 
   /**
-   * Déclare une variable d'état 'departement' pour les départements et une fonction de mise à jour 'setDepartement'
+   * Déclare une variable d'état 'departement' pour la liste des départements et une fonction de mise à jour 'setDepartement'
    * qui peut être utilisée pour mettre à jour la variable d'état "list".
    * @typedef {Array.<Object>} department - Cette variable de State contient les éléments de la liste des départements
    * @typedef {Function} setDepartment - Cette fonction met à jour le State local
    */
-  const [department, setDepartment] = useState([{}]);
+  const { department, setDepartment } = useContext(EmployeesContext);
   const handleDepartmentChange = (newState) => {
     setDepartment(newState);
   };
+  /**
+   * État de l'élément département sélectionné, avec une fonction pour mettre à jour l'état.
+   * @typedef {string} selectedDepartment - La valeur actuelle de l'élément sélectionné dans la liste.
+   * @typedef {function} setSelectedDepartment - Une fonction pour mettre à jour le département choisi.
+   */
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const handleSelectedDepartmentChange = (newState) => {
     setSelectedDepartment(newState);
@@ -64,28 +70,29 @@ function Form() {
   };
 
   /**
-   *
+   * Fonction qui met à jour les données du formulaire.
+   * @param {Object} event - L'événement de changement de saisie du formulaire.
    */
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Initialiser les dates dans le calendrier 📆
+  // Initialiser les dates du calendrier 📆
   useEffect(() => {
     // 01/01/1970
     refStartDate.current.min = new Date(0).toISOString().split('T')[0];
     // Aujourd'hui
+    const today = new Date().toISOString().split('T')[0];
     refStartDate.current.value = today;
     refStartDate.current.max = today;
-  }, [today]);
+  }, []);
 
   /**
-   *
-   * @param {*} event
-   * @param {*} ref
-   * @returns
+   * Fonction de gestionnaire d'événements pour la validation d'un champ de formulaire.
+   * @param {Event} event - L'événement déclencheur d'une validation (onBlur, onInvalid, onInput)
+   * @param {React.RefObject} ref - Référence d'un champ de formulaire.
+   * @returns {void}
    */
   const handleValidate = (event, ref) => {
     console.log(event.type);
@@ -109,6 +116,11 @@ function Form() {
     }
   };
 
+  /**
+   * Fonction de gestionnaire d'événements pour la soumission du formulaire.
+   * @param {Event} e - L'événement de soumission du formulaire.
+   * @returns {void}
+   */
   const handleSubmit = (e) => {
     // Rester sur le formulaire
     e.preventDefault();
@@ -117,12 +129,6 @@ function Form() {
       console.log('Save User');
     } else {
       // 👎
-      // refFirstname.current.parentNode.setAttribute('data-error-visible', true);
-      // refLastname.current.parentNode.setAttribute('data-error-visible', true);
-      // refStreet.current.parentNode.setAttribute('data-error-visible', true);
-      // refCity.current.parentNode.setAttribute('data-error-visible', true);
-      // refZipCode.current.parentNode.setAttribute('data-error-visible', true);
-      // refStartDate.current.parentNode.setAttribute('data-error-visible', true);
     }
   };
 
@@ -227,7 +233,7 @@ function Form() {
           />
         </div>
       </FieldSet>
-      {/* Service de l'employé */}
+      {/* Service et embauche de l'employé */}
       <FieldSet>
         <legend>Enrollment</legend>
         <div className="input-wrapper formData">
