@@ -9,6 +9,18 @@ const SaveButton = styled.button`
 `;
 
 function Form() {
+  const today = new Date().toISOString().split('T')[0];
+  const [formData, setFormData] = useState({
+    firstname: '',
+    lastname: '',
+    street: '',
+    city: '',
+    federal: '',
+    zipcode: '',
+    startDate: today,
+    department: '',
+  });
+
   /**
    * Références vers les élément du DOM
    */
@@ -29,13 +41,10 @@ function Form() {
   const handleFederalChange = (newState) => {
     setFederal(newState);
   };
-
-  /**
-   *
-   */
   const [selectedFederal, setSelectedFederal] = useState('');
   const handleSelectedFederalChange = (newState) => {
     setSelectedFederal(newState);
+    setFormData({ ...formData, federal: newState });
   };
 
   /**
@@ -48,15 +57,36 @@ function Form() {
   const handleDepartmentChange = (newState) => {
     setDepartment(newState);
   };
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const handleSelectedDepartmentChange = (newState) => {
+    setSelectedDepartment(newState);
+    setFormData({ ...formData, department: newState });
+  };
 
   /**
    *
    */
-  const [selectedDepartment, setSelectedDepartment] = useState('');
-  const handleSelectedDepartmentChange = (newState) => {
-    setSelectedDepartment(newState);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
   };
 
+  // Initialiser les dates dans le calendrier 📆
+  useEffect(() => {
+    // 01/01/1970
+    refStartDate.current.min = new Date(0).toISOString().split('T')[0];
+    // Aujourd'hui
+    refStartDate.current.value = today;
+    refStartDate.current.max = today;
+  }, [today]);
+
+  /**
+   *
+   * @param {*} event
+   * @param {*} ref
+   * @returns
+   */
   const handleValidate = (event, ref) => {
     console.log(event.type);
     event.preventDefault();
@@ -106,6 +136,8 @@ function Form() {
           <input
             type="text"
             id="firstname"
+            name="firstname"
+            lastname="firstname"
             required
             className="text-control"
             minLength="2"
@@ -113,6 +145,7 @@ function Form() {
             onBlur={(event) => handleValidate(event, refFirstname)}
             onInvalid={(event) => handleValidate(event, refFirstname)}
             onInput={(event) => handleValidate(event, refFirstname)}
+            onChange={handleInputChange}
           />
         </div>
         <div className="input-wrapper formData">
@@ -120,6 +153,7 @@ function Form() {
           <input
             type="text"
             id="lastname"
+            name="lastname"
             required
             className="text-control"
             minLength="2"
@@ -127,6 +161,7 @@ function Form() {
             onBlur={(event) => handleValidate(event, refLastname)}
             onInvalid={(event) => handleValidate(event, refLastname)}
             onInput={(event) => handleValidate(event, refLastname)}
+            onChange={handleInputChange}
           />
         </div>
       </FieldSet>
@@ -138,6 +173,7 @@ function Form() {
           <input
             type="text"
             id="street"
+            name="street"
             required
             className="text-control"
             minLength="2"
@@ -145,6 +181,7 @@ function Form() {
             onBlur={(event) => handleValidate(event, refStreet)}
             onInvalid={(event) => handleValidate(event, refStreet)}
             onInput={(event) => handleValidate(event, refStreet)}
+            onChange={handleInputChange}
           />
         </div>
         <div className="input-wrapper formData">
@@ -152,6 +189,7 @@ function Form() {
           <input
             type="text"
             id="city"
+            name="city"
             required
             className="text-control"
             minLength="2"
@@ -159,13 +197,15 @@ function Form() {
             onBlur={(event) => handleValidate(event, refCity)}
             onInvalid={(event) => handleValidate(event, refCity)}
             onInput={(event) => handleValidate(event, refCity)}
+            onChange={handleInputChange}
           />
         </div>
         <DropdownList
+          name={'state'}
           labelText={'State'}
           jsonUrl={'/data/states.json'}
           namedKey="abbreviation"
-          message="Please select a state"
+          message="Veuillez choisir un état"
           onListChange={handleFederalChange}
           onSelectedChange={handleSelectedFederalChange}
           selectedValue={selectedFederal}
@@ -175,6 +215,7 @@ function Form() {
           <input
             type="text"
             id="zipcode"
+            name="zipcode"
             required
             className="text-control"
             minLength="2"
@@ -182,17 +223,19 @@ function Form() {
             onBlur={(event) => handleValidate(event, refZipCode)}
             onInvalid={(event) => handleValidate(event, refZipCode)}
             onInput={(event) => handleValidate(event, refZipCode)}
+            onChange={handleInputChange}
           />
         </div>
       </FieldSet>
-      {/* Département de l'employé */}
+      {/* Service de l'employé */}
       <FieldSet>
         <legend>Enrollment</legend>
         <div className="input-wrapper formData">
           <label htmlFor="startDate">Start Date</label>
           <input
-            type="text"
+            type="date"
             id="startDate"
+            name="startDate"
             required
             className="text-control"
             minLength="2"
@@ -200,12 +243,14 @@ function Form() {
             onBlur={(event) => handleValidate(event, refStartDate)}
             onInvalid={(event) => handleValidate(event, refStartDate)}
             onInput={(event) => handleValidate(event, refStartDate)}
+            onChange={handleInputChange}
           />
         </div>
         <DropdownList
+          name={'department'}
           labelText={'Department'}
           jsonUrl={'/data/departments.json'}
-          message={'You must choose your department'}
+          message={'Veuillez choisr un département'}
           onListChange={handleDepartmentChange}
           onSelectedChange={handleSelectedDepartmentChange}
           selectedValue={selectedDepartment}
