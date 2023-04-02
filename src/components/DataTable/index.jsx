@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { EmployeesContext } from '../../utils/context';
 import styled from 'styled-components';
 import {
@@ -8,6 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   Paper,
   TextField,
 } from '@mui/material';
@@ -35,8 +36,6 @@ const FilterContainer = styled.div`
 `;
 
 const Datatable = () => {
-  const [filter, setFilter] = useState('');
-
   /**
    * Déclare une variable d'état 'users' pour la liste des utilisateurs et une fonction de mise à jour 'setUsers'
    * @typedef {Array.<Object>} users - Cette variable de State contient la liste des utilisateurs
@@ -52,8 +51,21 @@ const Datatable = () => {
    */
   const { department, setDepartment } = useContext(EmployeesContext);
 
+  const [filter, setFilter] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   // Filtrage des données
@@ -63,6 +75,9 @@ const Datatable = () => {
       user.lastname.toLowerCase().includes(filter.toLowerCase())
     );
   });
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = (page + 1) * rowsPerPage;
 
   return (
     <div>
@@ -90,14 +105,17 @@ const Datatable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredRows.map((row, index) => (
+            {filteredRows.slice(startIndex, endIndex).map((row, index) => (
               <TableRow key={1000 + index}>
                 <TableCell>{row.firstname}</TableCell>
                 <TableCell>{row.lastname}</TableCell>
                 <TableCell>{row.startDate}</TableCell>
                 <TableCell>
-                  {department.find((dep) => dep.id === row.department)?.name ||
-                    ''}
+                  {
+                    /** Jointure libellé */
+                    department.find((dep) => dep.id === row.department)?.name ||
+                      ''
+                  }
                 </TableCell>
                 <TableCell>{row.birthDate}</TableCell>
                 <TableCell>{row.street}</TableCell>
@@ -109,6 +127,15 @@ const Datatable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={filteredRows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </div>
   );
 };
