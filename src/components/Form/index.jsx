@@ -22,6 +22,7 @@ function Form() {
   const refForm = useRef();
   const refFirstname = useRef();
   const refLastname = useRef();
+  const refBirthDate = useRef();
   const refStreet = useRef();
   const refCity = useRef();
   const refZipCode = useRef();
@@ -78,12 +79,17 @@ function Form() {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Initialiser les dates du calendrier 📆
+  // Initialiser les dates des calendriers 📆
   useEffect(() => {
+    // Date minimum
+    const minDate = new Date();
+    minDate.setFullYear(minDate.getFullYear() - 90); // Moins 90 ans
+    refBirthDate.current.min = minDate.toISOString().split('T')[0];
     // 01/01/1970
     refStartDate.current.min = new Date(0).toISOString().split('T')[0];
     // Aujourd'hui
     const today = new Date().toISOString().split('T')[0];
+    refBirthDate.current.max = today;
     refStartDate.current.value = today;
     refStartDate.current.max = today;
   }, []);
@@ -167,6 +173,22 @@ function Form() {
             onBlur={(event) => handleValidate(event, refLastname)}
             onInvalid={(event) => handleValidate(event, refLastname)}
             onInput={(event) => handleValidate(event, refLastname)}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="input-wrapper formData">
+          <label htmlFor="birthDate">Date of Birth</label>
+          <input
+            type="date"
+            id="birthDate"
+            name="birthDate"
+            required
+            className="text-control"
+            minLength="2"
+            ref={refBirthDate}
+            onBlur={(event) => handleValidate(event, refBirthDate)}
+            onInvalid={(event) => handleValidate(event, refBirthDate)}
+            onInput={(event) => handleValidate(event, refBirthDate)}
             onChange={handleInputChange}
           />
         </div>

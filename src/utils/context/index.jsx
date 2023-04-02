@@ -26,6 +26,7 @@ const EmployeesProvider = (props) => {
    * @typedef {Object} FormData
    * @property {string} firstname - Prénom employé
    * @property {string} lastname - Nom de famille employé
+   * @property {string} birthDate - Date de naissance
    * @property {string} street - Adresse
    * @property {string} city - Ville
    * @property {string} federal - Etat fédéral
@@ -42,6 +43,7 @@ const EmployeesProvider = (props) => {
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
+    birthDate: '',
     street: '',
     city: '',
     federal: '',
