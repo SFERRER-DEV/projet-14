@@ -49,8 +49,16 @@ const EmployeesProvider = (props) => {
     federal: '',
     zipcode: '',
     startDate: new Date().toISOString().split('T')[0], // Aujourd'hui
-    department: '',
+    department: 0,
   });
+
+  /**
+   * Déclare une variable d'état pour stocker les données des utilisateurs et une fonction de mise à jour 'setUsers'
+   * qui peut être utilisée pour mettre à jour la variable d'état "formData".
+   * @typedef {Array.<Object>} users - Un tableau d'objet utilisateur
+   * @typedef {Function} setUsers - Cette fonction met à jour le State du tableau des utilisateurs
+   */
+  const [users, setUsers] = useState([]);
 
   const contextValue = {
     federal,
@@ -59,6 +67,8 @@ const EmployeesProvider = (props) => {
     setDepartment,
     formData,
     setFormData,
+    users,
+    setUsers,
   };
 
   return (

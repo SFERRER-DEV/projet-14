@@ -9,14 +9,6 @@ const SaveButton = styled.button`
 
 function Form() {
   /**
-   * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
-   * qui peut être utilisée pour mettre à jour la variable d'état "formData".
-   * @typedef {FormData} formData - Un objet à destructurer contenant l'état actuel de formData
-   * @typedef {Function} setFormData - Cette fonction met à jour le State de données du formulaire
-   */
-  const { formData, setFormData } = useContext(EmployeesContext);
-
-  /**
    * Références vers les élément du DOM
    */
   const refForm = useRef();
@@ -29,8 +21,23 @@ function Form() {
   const refStartDate = useRef();
 
   /**
-   * Déclare une variable d'état 'federal' pour la lisre des états féderaux et une fonction de mise à jour 'setFederal'
-   * @typedef {Array.<Object>} federal - Cette variable de State contient la liste des états fédéraux américains
+   * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
+   * qui peut être utilisée pour mettre à jour la variable d'état "formData".
+   * @typedef {FormData} formData - Un objet à destructurer contenant l'état actuel de formData
+   * @typedef {Function} setFormData - Cette fonction met à jour le State de données du formulaire
+   */
+  const { formData, setFormData } = useContext(EmployeesContext);
+
+  /**
+   * Déclare une variable d'état 'users' pour la liste des utilisateurs et une fonction de mise à jour 'setUsers'
+   * @typedef {Array.<Object>} users - Cette variable de State contient la liste des utilisateurs
+   * @typedef {Function} setUsers - Cette fonction met à jour le State local
+   */
+  const { users, setUsers } = useContext(EmployeesContext);
+
+  /**
+   * Déclare une variable d'état 'federal' pour la liste des états féderaux et une fonction de mise à jour 'setFederal'
+   * @typedef {Array.<Object>} federal - Cette variable de State contient la liste des états fédéraux.
    * @typedef {Function} setFederal - Cette fonction met à jour le State local
    */
   const { federal, setFederal } = useContext(EmployeesContext);
@@ -59,6 +66,7 @@ function Form() {
   const handleDepartmentChange = (newState) => {
     setDepartment(newState);
   };
+
   /**
    * État de l'élément département sélectionné, avec une fonction pour mettre à jour l'état.
    * @typedef {string} selectedDepartment - La valeur actuelle de l'élément sélectionné dans la liste.
@@ -67,7 +75,14 @@ function Form() {
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const handleSelectedDepartmentChange = (newState) => {
     setSelectedDepartment(newState);
-    setFormData({ ...formData, department: newState });
+    const newInt = parseInt(newState);
+    if (isNaN(newInt)) {
+      // 😑 Gérer l'erreur en utilisant une valeur par défaut
+      setFormData({ ...formData, department: 0 });
+    } else {
+      // Il faut mémoriser dans le json un entier et non pas une chaine de caractères pour réussir la jointure avec le libellé dans la datatable
+      setFormData({ ...formData, department: newInt });
+    }
   };
 
   /**
@@ -79,7 +94,7 @@ function Form() {
     setFormData({ ...formData, [name]: value });
   };
 
-  // Initialiser les dates des calendriers 📆
+  // Initialiser les dates dans les calendriers 📆
   useEffect(() => {
     // Date minimum
     const minDate = new Date();
@@ -131,7 +146,14 @@ function Form() {
     // Rester sur le formulaire
     e.preventDefault();
     if (refForm.current.checkValidity()) {
-      // ✅
+      // ✅ Ajouter le nouvel utilisateur à la collection des utilisateurs
+      setUsers([...users, formData]);
+      // 🧹 Réinitialisation du formulaire
+      refForm.current.reset();
+      // 🧽 Remise à blanc des listes du composant Dropdown
+      setSelectedFederal('');
+      setSelectedDepartment('');
+      // 👍
       console.log('Save User');
     } else {
       // 👎
