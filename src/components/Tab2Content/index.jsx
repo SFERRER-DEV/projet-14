@@ -27,7 +27,7 @@ function Tab2Content() {
   return (
     <React.Fragment>
       <h2>Current Employees</h2>
-      <DataTable columns={columns} />
+       <DataTable columns={columns} /> 
     </React.Fragment>
   );
 }

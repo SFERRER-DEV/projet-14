@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
 import { DropdownList } from 'basic-dropdown-list';
-import { FieldSet } from '../../utils/style/Atoms';
+import dayjs, { Dayjs } from 'dayjs';
 import { EmployeesContext } from '../../utils/context';
+import { FieldSet } from '../../utils/style/Atoms';
+import styled from 'styled-components';
 const SaveButton = styled.button`
   margin-left: auto;
 `;
@@ -96,15 +97,13 @@ function Form() {
 
   // Initialiser les dates dans les calendriers 📆
   useEffect(() => {
+    //const today = new Date().toISOString().split('T')[0];
+    const today = dayjs(new Date()).format('YYYY-MM-DD');
     // Date minimum
-    const minDate = new Date();
-    minDate.setFullYear(minDate.getFullYear() - 90); // Moins 90 ans
-    refBirthDate.current.min = minDate.toISOString().split('T')[0];
-    // 01/01/1970
-    refStartDate.current.min = new Date(0).toISOString().split('T')[0];
-    // Aujourd'hui
-    const today = new Date().toISOString().split('T')[0];
+    refBirthDate.current.min = '1931-01-01';
     refBirthDate.current.max = today;
+    // 01/01/1970
+    refStartDate.current.min = '1970-01-01';
     refStartDate.current.value = today;
     refStartDate.current.max = today;
   }, []);
@@ -205,8 +204,6 @@ function Form() {
             id="birthDate"
             name="birthDate"
             required
-            className="text-control"
-            minLength="2"
             ref={refBirthDate}
             onBlur={(event) => handleValidate(event, refBirthDate)}
             onInvalid={(event) => handleValidate(event, refBirthDate)}
@@ -287,8 +284,6 @@ function Form() {
             id="startDate"
             name="startDate"
             required
-            className="text-control"
-            minLength="2"
             ref={refStartDate}
             onBlur={(event) => handleValidate(event, refStartDate)}
             onInvalid={(event) => handleValidate(event, refStartDate)}

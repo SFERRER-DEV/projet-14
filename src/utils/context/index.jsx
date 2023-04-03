@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+import dayjs from 'dayjs';
 
 const EmployeesContext = createContext();
 
@@ -48,7 +49,7 @@ const EmployeesProvider = (props) => {
     city: '',
     federal: '',
     zipcode: '',
-    startDate: new Date().toISOString().split('T')[0], // Aujourd'hui
+    startDate: dayjs(new Date()).format('YYYY-MM-DD'), // Aujourd'hui,
     department: 0,
   });
 
