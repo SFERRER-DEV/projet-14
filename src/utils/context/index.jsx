@@ -42,15 +42,17 @@ const EmployeesProvider = (props) => {
    * @typedef {Function} setFormData - Cette fonction met à jour le State de données du formulaire
    */
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
-    birthDate: '',
-    street: '',
-    city: '',
-    federal: '',
-    zipcode: '',
-    startDate: dayjs(new Date()).format('YYYY-MM-DD'), // Aujourd'hui,
-    department: 0,
+    user: {
+      firstname: '',
+      lastname: '',
+      birthDate: '',
+      street: '',
+      city: '',
+      federal: '',
+      zipcode: '',
+      startDate: dayjs(new Date()).format('DD-MM-YYYY'), // Aujourd'hui,
+      department: 0,
+    },
   });
 
   /**
