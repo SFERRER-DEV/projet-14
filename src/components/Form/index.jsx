@@ -112,19 +112,6 @@ function Form() {
     setFormData({ ...formData, user: { ...formData.user, [name]: value } });
   };
 
-  // Initialiser les dates dans les calendriers 📆
-  useEffect(() => {
-    //const today = new Date().toISOString().split('T')[0];
-    const today = dayjs(new Date()).format('YYYY-MM-DD');
-    // Date minimum
-    refBirthDate.current.min = '1931-01-01';
-    refBirthDate.current.max = today;
-    // 01/01/1970
-    refStartDate.current.min = '1970-01-01';
-    refStartDate.current.value = today;
-    refStartDate.current.max = today;
-  }, []);
-
   /**
    * Fonction de gestionnaire d'événements pour la validation d'un champ de formulaire.
    * @param {Event} event - L'événement déclencheur d'une validation (onBlur, onInvalid, onInput)
@@ -219,7 +206,6 @@ function Form() {
               minLength="2"
               ref={refLastname}
               onBlur={(event) => handleValidate(event, refLastname)}
-              onAutoFill={(event) => handleValidate(event, refLastname)}
               onInvalid={(event) => handleValidate(event, refLastname)}
               onInput={(event) => handleValidate(event, refLastname)}
               onChange={handleInputChange}
@@ -232,6 +218,8 @@ function Form() {
               id="birthDate"
               name="birthDate"
               required
+              min="1931-01-01"
+              max={dayjs(new Date()).format('YYYY-MM-DD')}
               ref={refBirthDate}
               onBlur={(event) => handleValidate(event, refBirthDate)}
               onInvalid={(event) => handleValidate(event, refBirthDate)}
@@ -312,6 +300,9 @@ function Form() {
               id="startDate"
               name="startDate"
               required
+              min="1970-01-01"
+              value={formData.user.startDate}
+              max={dayjs(new Date()).format('YYYY-MM-DD')}
               ref={refStartDate}
               onBlur={(event) => handleValidate(event, refStartDate)}
               onInvalid={(event) => handleValidate(event, refStartDate)}

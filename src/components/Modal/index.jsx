@@ -57,7 +57,7 @@ export default function BasicModal({ open, setOpen }) {
           {department.find((dep) => dep.id === formData.user.department)
             ?.name || ''}{' '}
         </p>
-        <p>Start date :{formData.user.startDate}</p>
+        <p>Start date: {dayjs(formData.user.startDate).format('DD-MM-YYYY')}</p>
         <p>New employee created</p>
       </Box>
     </Modal>
