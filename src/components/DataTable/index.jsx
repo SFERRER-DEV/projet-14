@@ -14,6 +14,7 @@ import {
   TableSortLabel,
   TablePagination,
 } from '@mui/material';
+import dayjs from 'dayjs';
 
 // Style pour la zone de recherche/filtrage
 const FilterContainer = styled.div`
@@ -21,21 +22,6 @@ const FilterContainer = styled.div`
   justify-content: flex-end;
   margin-bottom: 1em;
 `;
-
-/**
- * Formate une date au format 'yyyy-mm-dd' en une date au format 'dd/mm/yyyy' en français.
- * @param {string} dateString - La chaîne de caractères contenant la date au format 'yyyy-mm-dd'
- *@returns {string} - La date formatée au format 'dd/mm/yyyy'
- */
-function formatDate(dateString) {
-  const dateArray = dateString.split('-'); // Split la chaîne de caractères en un tableau
-  const year = dateArray[0];
-  const month = dateArray[1] - 1; // Les mois en JavaScript commencent à 0
-  const day = dateArray[2];
-  const dateObject = new Date(year, month, day); // Crée un objet Date
-  const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
-  return dateObject.toLocaleDateString('fr-FR', options); // Renvoie une chaîne de caractères formatée en français
-}
 
 const Datatable = ({ columns }) => {
   /**
@@ -197,7 +183,7 @@ const Datatable = ({ columns }) => {
                     ) : column.field === 'startDate' ||
                       column.field === 'birthDate' ? (
                       <TableCell key={column.field}>
-                        {formatDate(row[column.field])}
+                        {dayjs(row[column.field]).format('DD-MM-YYYY')}
                       </TableCell>
                     ) : (
                       <TableCell key={column.field}>
