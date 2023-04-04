@@ -42,16 +42,14 @@ function FormDialog({ open, setOpen, activeTab, setActiveTab }) {
         <DialogTitle>New employee created</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <p>
-              {formData.user.firstname} {formData.user.lastname}
-            </p>
-            <p>
-              Department :
-              {department.find((dep) => dep.id === formData.user.department)
-                ?.name || ''}{' '}
-              <br />
-              Start date: {dayjs(formData.user.startDate).format('DD-MM-YYYY')}
-            </p>
+            {formData.user.firstname} {formData.user.lastname}
+            <br />
+            Department :
+            {department.find((dep) => dep.id === formData.user.department)
+              ?.name || ''}{' '}
+            <br />
+            Start date:{' '}
+            {dayjs(formData.user.startDate).format('dddd D MMMM YYYY')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

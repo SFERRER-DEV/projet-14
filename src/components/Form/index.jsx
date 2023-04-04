@@ -294,7 +294,7 @@ function FormCreate({ open, setOpen }) {
               name="startDate"
               required
               min="1970-01-01"
-              value={formData.user.startDate}
+              value={dayjs(formData.user.startDate).format('YYYY-MM-DD')}
               max={dayjs(new Date()).format('YYYY-MM-DD')}
               ref={refStartDate}
               onBlur={(event) => handleValidate(event, refStartDate)}
