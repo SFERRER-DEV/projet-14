@@ -9,15 +9,36 @@ const StyledGlobalStyle = createGlobalStyle`
     }
 
     html, body {
-      font-size: 16px;
       font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+    }
+
+    #root {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     main {
+      flex: 1 0 auto;
       display:flex;
+      flex-direction: column;
       @media (max-width:767px) {
         font-size: 0.85rem;
       }
+    }
+
+    header, footer {
+      flex: 0 0 auto;
+    }
+
+    article {
+      padding-left: 2em;
+      padding-right: 2em;
+    }
+
+    article > h2 {
+      text-indent: 2em;
     }
 
     button {
@@ -46,10 +67,10 @@ const StyledGlobalStyle = createGlobalStyle`
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      font-size: 1rem;
+      font-size: 1em;
       font-weight: 500;
-      color: #000;
-      background-color: #fff;
+      color:  ${colors.textColor};
+      background-color: ${colors.backgroundColor};
     }
 
     .formData {
