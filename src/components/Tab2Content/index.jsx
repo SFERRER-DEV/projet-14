@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import DataTable from '../DataTable';
 
-function Tab2Content() {
+function Tab2Content({ activeTab, setActiveTab }) {
   /**
    * Liste des colonnes pour la DataTable
    * @typedef {Object} Column
@@ -27,9 +28,18 @@ function Tab2Content() {
   return (
     <React.Fragment>
       <h2>Current Employees</h2>
-       <DataTable columns={columns} /> 
+      <DataTable columns={columns} />
     </React.Fragment>
   );
 }
+
+Tab2Content.defaultProps = {
+  activeTab: 1,
+};
+
+Tab2Content.propTypes = {
+  activeTab: PropTypes.number,
+  setActiveTab: PropTypes.func.isRequired,
+};
 
 export default Tab2Content;

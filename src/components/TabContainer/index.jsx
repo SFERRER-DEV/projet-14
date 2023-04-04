@@ -59,11 +59,11 @@ function TabContainer() {
       <EmployeesProvider>
         <TabContent active={activeTab === 1}>
           {/** Contenu de l'onglet 1 */}
-          <Tab1Content />
+          <Tab1Content activeTab={activeTab} setActiveTab={setActiveTab} />
         </TabContent>
         <TabContent active={activeTab === 2}>
           {/** Contenu de l'onglet 2 */}
-          <Tab2Content />
+          <Tab2Content activeTab={activeTab} setActiveTab={setActiveTab} />
         </TabContent>
       </EmployeesProvider>
     </main>

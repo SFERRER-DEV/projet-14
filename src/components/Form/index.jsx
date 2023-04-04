@@ -1,8 +1,8 @@
 import React, { useContext, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { DropdownList } from 'basic-dropdown-list';
 import dayjs from 'dayjs';
 import { EmployeesContext } from '../../utils/context';
-import Modal from '../Modal';
 import { FieldSet } from '../../utils/style/Atoms';
 import styled from 'styled-components';
 
@@ -10,7 +10,7 @@ const SaveButton = styled.button`
   margin-left: auto;
 `;
 
-function Form() {
+function FormCreate({ open, setOpen }) {
   /**
    * Références vers les élément du DOM
    */
@@ -23,12 +23,6 @@ function Form() {
   const refZipCode = useRef();
   const refStartDate = useRef();
 
-  /**
-   * État d'ouverture de la fenêtre modale, avec une fonction pour mettre à jour l'état.
-   * @typedef {boolean} open - Fermée par défaut ou ouverte.
-   * @typedef {function} setOpen - Une fonction pour mettre à jour l'état d'ouverture.
-   */
-  const [open, setOpen] = useState(false);
   /**
    * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
    * qui peut être utilisée pour mettre à jour la variable d'état "formData".
@@ -173,7 +167,6 @@ function Form() {
 
   return (
     <React.Fragment>
-      <Modal open={open} setOpen={setOpen} />
       <form ref={refForm} onSubmit={(e) => handleSubmit(e)}>
         {/* Civilité */}
         <FieldSet>
@@ -326,4 +319,13 @@ function Form() {
   );
 }
 
-export default Form;
+FormCreate.defaultProps = {
+  open: false,
+};
+
+FormCreate.propTypes = {
+  open: PropTypes.bool,
+  setOpen: PropTypes.func.isRequired,
+};
+
+export default FormCreate;
