@@ -10,6 +10,101 @@ const SaveButton = styled.button`
   margin-left: auto;
 `;
 
+/**
+ * Fonction de gestionnaire d'événements pour la validation d'un champ de formulaire.
+ * @param {Event} event - L'événement déclencheur d'une validation (onBlur, onInvalid, onInput)
+ * @param {React.RefObject} ref - Référence d'un champ de formulaire.
+ * @param {Object} formData - Un objet à destructurer contenant l'état actuel de formData
+ * @param {Function} setFormData - Cette fonction met à jour le State de données du formulaire
+ * @returns {void}
+ */
+const handleValidate = (event, ref, formData, setFormData) => {
+  console.log(event.type);
+  event.preventDefault();
+
+  const { name, value } = event.target;
+  // div contenant le champ du formulaire et possède la classe css .formData
+  const wrapper = ref.current.parentNode;
+  if (
+    wrapper === null ||
+    wrapper === undefined ||
+    !wrapper.classList.contains('formData')
+  ) {
+    return;
+  }
+
+  if (ref.current.validity.valid) {
+    wrapper.setAttribute('data-error-visible', 'false');
+    wrapper.setAttribute('data-error', '');
+    //
+    setFormData({ ...formData, user: { ...formData.user, [name]: value } });
+  } else {
+    wrapper.setAttribute('data-error-visible', 'true');
+    wrapper.setAttribute('data-error', ref.current.validationMessage);
+  }
+};
+
+/**
+ * Fonction qui met à jour les données du formulaire.
+ * @param {Object} event - L'événement de changement de saisie du formulaire.
+ * @param {Object} formData - Un objet à destructurer contenant l'état actuel de formData
+ * @param {Function} setFormData - Cette fonction met à jour le State de données du formulaire
+ */
+const handleInputChange = (event, formData, setFormData) => {
+  const { name, value } = event.target;
+  setFormData({ ...formData, user: { ...formData.user, [name]: value } });
+};
+
+/**
+ * Fonction qui met à jour les données du formulaire pour la liste déroulante des états fédéraux
+ * @param {string} newState - Valeur de la clé d'un élément de la liste  (CA, NY, ...)
+ * @param {*} setSelectedFederal - Une fonction pour mettre à jour l'état fédéral choisi
+ * @param {Object} formData - Un objet à destructurer contenant l'état actuel de formData
+ * @param {Function} setFormData - Cette fonction met à jour le State de données du formulaire
+ */
+const handleSelectedFederalChange = (
+  newState,
+  setSelectedFederal,
+  formData,
+  setFormData
+) => {
+  setSelectedFederal(newState);
+  setFormData({
+    ...formData,
+    user: { ...formData.user, federal: newState },
+  });
+};
+
+/**
+ * Fonction qui met à jour les données du formulaire pour la liste déroulante des départements
+ * @param {string} newState - Valeur de la clé d'un élément de la liste  (1, 2, 3 ...)
+ * @param {Function} setSelectedDepartment - Une fonction pour mettre à jour le département choisi.
+ * @param {Object} formData - Un objet à destructurer contenant l'état actuel de formData
+ * @param {Function} setFormData - Cette fonction met à jour le State de données du formulaire
+ */
+const handleSelectedDepartmentChange = (
+  newState,
+  setSelectedDepartment,
+  formData,
+  setFormData
+) => {
+  setSelectedDepartment(newState);
+  const newInt = parseInt(newState);
+  if (isNaN(newInt)) {
+    // 😑 Gérer l'erreur en utilisant une valeur par défaut
+    setFormData({
+      ...formData,
+      user: { ...formData.user, department: 0 },
+    });
+  } else {
+    // Il faut mémoriser dans le json un entier et non pas une chaine de caractères pour réussir la jointure avec le libellé dans la datatable
+    setFormData({
+      ...formData,
+      user: { ...formData.user, department: newInt },
+    });
+  }
+};
+
 function FormCreate({ open, setOpen }) {
   /**
    * Références vers les élément du DOM
@@ -26,7 +121,7 @@ function FormCreate({ open, setOpen }) {
   /**
    * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
    * qui peut être utilisée pour mettre à jour la variable d'état "formData".
-   * @typedef {FormData} formData - Un objet à destructurer contenant l'état actuel de formData
+   * @typedef {Object} formData - Un objet à destructurer contenant l'état actuel de formData
    * @typedef {Function} setFormData - Cette fonction met à jour le State de données du formulaire
    */
   const { formData, setFormData } = useContext(EmployeesContext);
@@ -54,13 +149,6 @@ function FormCreate({ open, setOpen }) {
    * @typedef {function} setSelectedFederal - Une fonction pour mettre à jour l'état fédéral choisi.
    */
   const [selectedFederal, setSelectedFederal] = useState('');
-  const handleSelectedFederalChange = (newState) => {
-    setSelectedFederal(newState);
-    setFormData({
-      ...formData,
-      user: { ...formData.user, federal: newState },
-    });
-  };
 
   /**
    * Déclare une variable d'état 'departement' pour la liste de tous les départements et une fonction de mise à jour 'setDepartement'
@@ -79,64 +167,6 @@ function FormCreate({ open, setOpen }) {
    * @typedef {function} setSelectedDepartment - Une fonction pour mettre à jour le département choisi.
    */
   const [selectedDepartment, setSelectedDepartment] = useState('');
-  const handleSelectedDepartmentChange = (newState) => {
-    setSelectedDepartment(newState);
-    const newInt = parseInt(newState);
-    if (isNaN(newInt)) {
-      // 😑 Gérer l'erreur en utilisant une valeur par défaut
-      setFormData({
-        ...formData,
-        user: { ...formData.user, department: 0 },
-      });
-    } else {
-      // Il faut mémoriser dans le json un entier et non pas une chaine de caractères pour réussir la jointure avec le libellé dans la datatable
-      setFormData({
-        ...formData,
-        user: { ...formData.user, department: newInt },
-      });
-    }
-  };
-
-  /**
-   * Fonction qui met à jour les données du formulaire.
-   * @param {Object} event - L'événement de changement de saisie du formulaire.
-   */
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, user: { ...formData.user, [name]: value } });
-  };
-
-  /**
-   * Fonction de gestionnaire d'événements pour la validation d'un champ de formulaire.
-   * @param {Event} event - L'événement déclencheur d'une validation (onBlur, onInvalid, onInput)
-   * @param {React.RefObject} ref - Référence d'un champ de formulaire.
-   * @returns {void}
-   */
-  const handleValidate = (event, ref) => {
-    console.log(event.type);
-    event.preventDefault();
-
-    const { name, value } = event.target;
-    // div contenant le champ du formulaire et possède la classe css .formData
-    const wrapper = ref.current.parentNode;
-    if (
-      wrapper === null ||
-      wrapper === undefined ||
-      !wrapper.classList.contains('formData')
-    ) {
-      return;
-    }
-
-    if (ref.current.validity.valid) {
-      wrapper.setAttribute('data-error-visible', 'false');
-      wrapper.setAttribute('data-error', '');
-      //
-      setFormData({ ...formData, user: { ...formData.user, [name]: value } });
-    } else {
-      wrapper.setAttribute('data-error-visible', 'true');
-      wrapper.setAttribute('data-error', ref.current.validationMessage);
-    }
-  };
 
   /**
    * Fonction de gestionnaire d'événements pour la soumission du formulaire.
@@ -180,10 +210,18 @@ function FormCreate({ open, setOpen }) {
               className="text-control"
               minLength="2"
               ref={refFirstname}
-              onBlur={(event) => handleValidate(event, refFirstname)}
-              onInvalid={(event) => handleValidate(event, refFirstname)}
-              onInput={(event) => handleValidate(event, refFirstname)}
-              onChange={handleInputChange}
+              onBlur={(event) =>
+                handleValidate(event, refFirstname, formData, setFormData)
+              }
+              onInvalid={(event) =>
+                handleValidate(event, refFirstname, formData, setFormData)
+              }
+              onInput={(event) =>
+                handleValidate(event, refFirstname, formData, setFormData)
+              }
+              onChange={(event) =>
+                handleInputChange(event, formData, setFormData)
+              }
             />
           </div>
           <div className="input-wrapper formData">
@@ -196,10 +234,18 @@ function FormCreate({ open, setOpen }) {
               className="text-control"
               minLength="2"
               ref={refLastname}
-              onBlur={(event) => handleValidate(event, refLastname)}
-              onInvalid={(event) => handleValidate(event, refLastname)}
-              onInput={(event) => handleValidate(event, refLastname)}
-              onChange={handleInputChange}
+              onBlur={(event) =>
+                handleValidate(event, refLastname, formData, setFormData)
+              }
+              onInvalid={(event) =>
+                handleValidate(event, refLastname, formData, setFormData)
+              }
+              onInput={(event) =>
+                handleValidate(event, refLastname, formData, setFormData)
+              }
+              onChange={(event) =>
+                handleInputChange(event, formData, setFormData)
+              }
             />
           </div>
           <div className="input-wrapper formData">
@@ -212,10 +258,18 @@ function FormCreate({ open, setOpen }) {
               min="1931-01-01"
               max={dayjs(new Date()).format('YYYY-MM-DD')}
               ref={refBirthDate}
-              onBlur={(event) => handleValidate(event, refBirthDate)}
-              onInvalid={(event) => handleValidate(event, refBirthDate)}
-              onInput={(event) => handleValidate(event, refBirthDate)}
-              onChange={handleInputChange}
+              onBlur={(event) =>
+                handleValidate(event, refBirthDate, formData, setFormData)
+              }
+              onInvalid={(event) =>
+                handleValidate(event, refBirthDate, formData, setFormData)
+              }
+              onInput={(event) =>
+                handleValidate(event, refBirthDate, formData, setFormData)
+              }
+              onChange={(event) =>
+                handleInputChange(event, formData, setFormData)
+              }
             />
           </div>
         </FieldSet>
@@ -232,10 +286,18 @@ function FormCreate({ open, setOpen }) {
               className="text-control"
               minLength="2"
               ref={refStreet}
-              onBlur={(event) => handleValidate(event, refStreet)}
-              onInvalid={(event) => handleValidate(event, refStreet)}
-              onInput={(event) => handleValidate(event, refStreet)}
-              onChange={handleInputChange}
+              onBlur={(event) =>
+                handleValidate(event, refStreet, formData, setFormData)
+              }
+              onInvalid={(event) =>
+                handleValidate(event, refStreet, formData, setFormData)
+              }
+              onInput={(event) =>
+                handleValidate(event, refStreet, formData, setFormData)
+              }
+              onChange={(event) =>
+                handleInputChange(event, formData, setFormData)
+              }
             />
           </div>
           <div className="input-wrapper formData">
@@ -248,10 +310,18 @@ function FormCreate({ open, setOpen }) {
               className="text-control"
               minLength="2"
               ref={refCity}
-              onBlur={(event) => handleValidate(event, refCity)}
-              onInvalid={(event) => handleValidate(event, refCity)}
-              onInput={(event) => handleValidate(event, refCity)}
-              onChange={handleInputChange}
+              onBlur={(event) =>
+                handleValidate(event, refCity, formData, setFormData)
+              }
+              onInvalid={(event) =>
+                handleValidate(event, refCity, formData, setFormData)
+              }
+              onInput={(event) =>
+                handleValidate(event, refCity, formData, setFormData)
+              }
+              onChange={(event) =>
+                handleInputChange(event, formData, setFormData)
+              }
             />
           </div>
           <DropdownList
@@ -261,7 +331,14 @@ function FormCreate({ open, setOpen }) {
             namedKey="abbreviation"
             message="Veuillez choisir un état"
             onListChange={handleFederalChange}
-            onSelectedChange={handleSelectedFederalChange}
+            onSelectedChange={(event) =>
+              handleSelectedFederalChange(
+                event,
+                setSelectedFederal,
+                formData,
+                setFormData
+              )
+            }
             selectedValue={selectedFederal}
           />
           <div className="input-wrapper formData">
@@ -274,10 +351,18 @@ function FormCreate({ open, setOpen }) {
               className="text-control"
               minLength="2"
               ref={refZipCode}
-              onBlur={(event) => handleValidate(event, refZipCode)}
-              onInvalid={(event) => handleValidate(event, refZipCode)}
-              onInput={(event) => handleValidate(event, refZipCode)}
-              onChange={handleInputChange}
+              onBlur={(event) =>
+                handleValidate(event, refZipCode, formData, setFormData)
+              }
+              onInvalid={(event) =>
+                handleValidate(event, refZipCode, formData, setFormData)
+              }
+              onInput={(event) =>
+                handleValidate(event, refZipCode, formData, setFormData)
+              }
+              onChange={(event) =>
+                handleInputChange(event, formData, setFormData)
+              }
             />
           </div>
         </FieldSet>
@@ -295,10 +380,18 @@ function FormCreate({ open, setOpen }) {
               value={dayjs(formData.user.startDate).format('YYYY-MM-DD')}
               max={dayjs(new Date()).format('YYYY-MM-DD')}
               ref={refStartDate}
-              onBlur={(event) => handleValidate(event, refStartDate)}
-              onInvalid={(event) => handleValidate(event, refStartDate)}
-              onInput={(event) => handleValidate(event, refStartDate)}
-              onChange={handleInputChange}
+              onBlur={(event) =>
+                handleValidate(event, refStartDate, formData, setFormData)
+              }
+              onInvalid={(event) =>
+                handleValidate(event, refStartDate, formData, setFormData)
+              }
+              onInput={(event) =>
+                handleValidate(event, refStartDate, formData, setFormData)
+              }
+              onChange={(event) =>
+                handleInputChange(event, formData, setFormData)
+              }
             />
           </div>
           <DropdownList
@@ -307,7 +400,14 @@ function FormCreate({ open, setOpen }) {
             jsonUrl={'/data/departments.json'}
             message={'Veuillez choisr un département'}
             onListChange={handleDepartmentChange}
-            onSelectedChange={handleSelectedDepartmentChange}
+            onSelectedChange={(event) =>
+              handleSelectedDepartmentChange(
+                event,
+                setSelectedDepartment,
+                formData,
+                setFormData
+              )
+            }
             selectedValue={selectedDepartment}
           />
         </FieldSet>
