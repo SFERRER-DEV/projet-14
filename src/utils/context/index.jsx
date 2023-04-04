@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+import dayjs from 'dayjs';
 
 const EmployeesContext = createContext();
 
@@ -26,6 +27,7 @@ const EmployeesProvider = (props) => {
    * @typedef {Object} FormData
    * @property {string} firstname - Prénom employé
    * @property {string} lastname - Nom de famille employé
+   * @property {string} birthDate - Date de naissance
    * @property {string} street - Adresse
    * @property {string} city - Ville
    * @property {string} federal - Etat fédéral
@@ -40,15 +42,26 @@ const EmployeesProvider = (props) => {
    * @typedef {Function} setFormData - Cette fonction met à jour le State de données du formulaire
    */
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
-    street: '',
-    city: '',
-    federal: '',
-    zipcode: '',
-    startDate: new Date().toISOString().split('T')[0], // Aujourd'hui
-    department: '',
+    user: {
+      firstname: '',
+      lastname: '',
+      birthDate: '',
+      street: '',
+      city: '',
+      federal: '',
+      zipcode: '',
+      startDate: dayjs(new Date()).format('DD-MM-YYYY'), // Aujourd'hui,
+      department: 0,
+    },
   });
+
+  /**
+   * Déclare une variable d'état pour stocker les données des utilisateurs et une fonction de mise à jour 'setUsers'
+   * qui peut être utilisée pour mettre à jour la variable d'état "formData".
+   * @typedef {Array.<Object>} users - Un tableau d'objet utilisateur
+   * @typedef {Function} setUsers - Cette fonction met à jour le State du tableau des utilisateurs
+   */
+  const [users, setUsers] = useState([]);
 
   const contextValue = {
     federal,
@@ -57,6 +70,8 @@ const EmployeesProvider = (props) => {
     setDepartment,
     formData,
     setFormData,
+    users,
+    setUsers,
   };
 
   return (
