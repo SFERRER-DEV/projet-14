@@ -61,7 +61,7 @@ const EmployeesProvider = (props) => {
    * @typedef {Array.<Object>} users - Un tableau d'objet utilisateur
    * @typedef {Function} setUsers - Cette fonction met à jour le State du tableau des utilisateurs
    */
-  const [users, setUsers] = useState([]);
+  let [users, setUsers] =  useState([]);
 
   const contextValue = {
     federal,

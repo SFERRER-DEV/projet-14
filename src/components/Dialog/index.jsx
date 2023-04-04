@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -34,7 +34,16 @@ function FormDialog({ open, setOpen, activeTab, setActiveTab }) {
    * @typedef {Object} formData - Cette variable de State contient un utilisateur.
    * @typedef {Function} setFormData - Cette fonction met à jour le State local
    */
-  const { formData, setFormData, department } = useContext(EmployeesContext);
+  const { formData, setFormData, users, setUsers, department } =
+    useContext(EmployeesContext);
+
+  // Sauvegarder les utilisateurs dans le local storage 💾
+  useEffect(() => {
+    if (Array.isArray(users) && users.length !== 0) {
+      localStorage.setItem('hrnetfs_users', JSON.stringify(users));
+      console.log('💾');
+    }
+  }, [users]);
 
   return (
     <div>

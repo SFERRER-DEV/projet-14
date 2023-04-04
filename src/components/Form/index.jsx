@@ -149,10 +149,8 @@ function FormCreate({ open, setOpen }) {
     if (refForm.current.checkValidity()) {
       // ✅ Ajouter le nouvel utilisateur à la collection des utilisateurs
       setUsers([...users, formData.user]);
-      // Ouvrir la modale
-      console.log('Ouverture');
+      // Ouvrir la modale;
       setOpen(true);
-      console.log('Fermeture');
       // 🧹 Réinitialisation du formulaire
       refForm.current.reset();
       // 🧽 Remise à blanc des listes du composant Dropdown

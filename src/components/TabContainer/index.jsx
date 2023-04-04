@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Tab1Content from '../Tab1Content';
 import Tab2Content from '../Tab2Content';
-import { EmployeesProvider } from '../../utils/context';
+import { EmployeesContext } from '../../utils/context';
 import colors from '../../utils/style/colors';
 
 /** @type {Object} Le conteneur des boutons est une balise `<div>` */
@@ -46,6 +46,20 @@ function TabContainer() {
     setActiveTab(tabIndex);
   };
 
+  /**
+   * Déclare une variable d'état 'users' pour la liste des utilisateurs et une fonction de mise à jour 'setUsers'
+   * @typedef {Array.<Object>} users - Cette variable de State contient la liste des utilisateurs
+   * @typedef {Function} setUsers - Cette fonction met à jour le State local
+   */
+  const { users, setUsers } = useContext(EmployeesContext);
+  useEffect(() => {
+    const storedData = localStorage.getItem('hrnetfs_users');
+    if (storedData) {
+      setUsers(JSON.parse(storedData));
+      console.log('⏯');
+    }
+  }, [setUsers]);
+
   return (
     <main>
       <TabButtonsContainer>
@@ -56,16 +70,14 @@ function TabContainer() {
           View current Employees
         </TabButton>
       </TabButtonsContainer>
-      <EmployeesProvider>
-        <TabContent active={activeTab === 1}>
-          {/** Contenu de l'onglet 1 */}
-          <Tab1Content activeTab={activeTab} setActiveTab={setActiveTab} />
-        </TabContent>
-        <TabContent active={activeTab === 2}>
-          {/** Contenu de l'onglet 2 */}
-          <Tab2Content activeTab={activeTab} setActiveTab={setActiveTab} />
-        </TabContent>
-      </EmployeesProvider>
+      <TabContent active={activeTab === 1}>
+        {/** Contenu de l'onglet 1 */}
+        <Tab1Content activeTab={activeTab} setActiveTab={setActiveTab} />
+      </TabContent>
+      <TabContent active={activeTab === 2}>
+        {/** Contenu de l'onglet 2 */}
+        <Tab2Content activeTab={activeTab} setActiveTab={setActiveTab} />
+      </TabContent>
     </main>
   );
 }
