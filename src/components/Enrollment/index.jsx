@@ -1,9 +1,24 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { DropdownList } from 'basic-dropdown-list';
 import { EmployeesContext } from '../../utils/context';
 import { FieldSet } from '../../utils/style/Atoms';
-import dayjs from 'dayjs';
+import styled from 'styled-components';
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/fr';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0.25em 0.5em;
+  & .react-calendar {
+    width: 100%;
+  }
+`;
 
 function Enrollment({
   handleValidate,
@@ -25,6 +40,7 @@ function Enrollment({
    */
   const { formData, setFormData } = useContext(EmployeesContext);
 
+  const [selectedDate, setSelectedDate] = useState(formData.user.startDate);
   /**
    * Déclare une variable d'état 'departement' pour la liste de tous les départements et une fonction de mise à jour 'setDepartement'
    * qui peut être utilisée pour mettre à jour la variable d'état "list".
@@ -36,32 +52,35 @@ function Enrollment({
     setDepartment(newState);
   };
 
+  const handleDateChange = (date) => {
+    console.log('📆 handleDateChange');
+    setSelectedDate(dayjs(date).format('DD/MM/YYYY'));
+    let newValue = '';
+    if (date !== null) {
+      newValue = dayjs(date).format('DD/MM/YYYY');
+    }
+    setFormData({
+      ...formData,
+      user: { ...formData.user, startDate: newValue },
+    });
+  };
+
   return (
     <FieldSet>
       <legend>Enrollment</legend>
-      <div className="input-wrapper formData">
+      <Wrapper>
         <label htmlFor="startDate">Start Date</label>
-        <input
-          type="date"
+        <Calendar
           id="startDate"
           name="startDate"
-          required
-          min="1970-01-01"
-          value={dayjs(formData.user.startDate).format('YYYY-MM-DD')}
-          max={dayjs(new Date()).format('YYYY-MM-DD')}
-          ref={refStartDate}
-          onBlur={(event) =>
-            handleValidate(event, refStartDate, formData, setFormData)
-          }
-          onInvalid={(event) =>
-            handleValidate(event, refStartDate, formData, setFormData)
-          }
-          onInput={(event) =>
-            handleValidate(event, refStartDate, formData, setFormData)
-          }
-          onChange={(event) => handleInputChange(event, formData, setFormData)}
+          value={selectedDate}
+          minDate={new Date('01/01/1970')}
+          maxDate={new Date()}
+          format="dd/MM/yyyy"
+          locale="fr"
+          onChange={(date) => handleDateChange(date)}
         />
-      </div>
+      </Wrapper>
       <DropdownList
         name={'department'}
         labelText={'Department'}

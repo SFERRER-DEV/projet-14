@@ -5,6 +5,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import { EmployeesProvider } from './utils/context';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'dayjs/locale/fr';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,7 +15,9 @@ root.render(
     <GlobalStyle />
     <Header />
     <EmployeesProvider>
-      <HomePage />
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+        <HomePage />
+      </LocalizationProvider>
     </EmployeesProvider>
     <Footer />
   </React.StrictMode>

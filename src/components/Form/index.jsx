@@ -4,9 +4,39 @@ import { EmployeesContext } from '../../utils/context';
 import Employee from '../../components/Employee';
 import Enrollment from '../../components/Enrollment';
 import Address from '../../components/Address';
+import dayjs from 'dayjs';
 import styled from 'styled-components';
+import colors from '../../utils/style/colors';
+
+const Container = styled.div`
+  min-height: 25em;
+  height: 100%;
+  width: 100%;
+  @media (max-width: 767px) {
+    height: 100%;
+  }
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+`;
 
 const SaveButton = styled.button`
+  font-size: 1.25em;
+  font-weight: bold;
+  text-decoration: none;
+  color: #${colors.backgroundColor};
+  background-color: ${colors.primary};
+  border: none;
+  border-radius: 0.25em;
+  padding: 0.75em 1.5em;
+  margin: 0.5em 1em;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: ${colors.secondary};
+  }
+  cursor: pointer;
   margin-left: auto;
 `;
 
@@ -24,7 +54,7 @@ const handleValidate = (event, ref, formData, setFormData) => {
 
   const { name, value } = event.target;
   // div contenant le champ du formulaire et possède la classe css .formData
-  const wrapper = ref.current.parentNode;
+  const wrapper = ref?.current?.parentNode;
   if (
     wrapper === null ||
     wrapper === undefined ||
@@ -148,7 +178,11 @@ function FormCreate({ open, setOpen }) {
   const handleSubmit = (e) => {
     // Rester sur le formulaire
     e.preventDefault();
-    if (refForm.current.checkValidity()) {
+    if (
+      refForm.current.checkValidity() &&
+      dayjs(formData.user.birthDate).isValid() &&
+      dayjs(formData.user.startDate).isValid()
+    ) {
       // ✅ Ajouter le nouvel utilisateur à la collection des utilisateurs
       setUsers([...users, formData.user]);
       // Ouvrir la modale;
@@ -162,33 +196,35 @@ function FormCreate({ open, setOpen }) {
       console.log('Save User');
     } else {
       // 👎
+      console.log('👎');
     }
   };
 
   return (
     <form ref={refForm} onSubmit={(e) => handleSubmit(e)}>
-      {/* Civilité */}
-      <Employee
-        handleValidate={handleValidate}
-        handleInputChange={handleInputChange}
-      />
-
-      {/* Adresse */}
-      <Address
-        handleValidate={handleValidate}
-        handleInputChange={handleInputChange}
-        handleSelectedFederalChange={handleSelectedFederalChange}
-        selectedFederal={selectedFederal}
-        setSelectedFederal={setSelectedFederal}
-      />
-      {/* Service et embauche de l'employé */}
-      <Enrollment
-        handleValidate={handleValidate}
-        handleInputChange={handleInputChange}
-        handleSelectedDepartmentChange={handleSelectedDepartmentChange}
-        selectedDepartment={selectedDepartment}
-        setSelectedDepartment={setSelectedDepartment}
-      />
+      <Container>
+        {/* Employé */}
+        <Employee
+          handleValidate={handleValidate}
+          handleInputChange={handleInputChange}
+        />
+        {/* Adresse */}
+        <Address
+          handleValidate={handleValidate}
+          handleInputChange={handleInputChange}
+          handleSelectedFederalChange={handleSelectedFederalChange}
+          selectedFederal={selectedFederal}
+          setSelectedFederal={setSelectedFederal}
+        />
+        {/* Embauche */}
+        <Enrollment
+          handleValidate={handleValidate}
+          handleInputChange={handleInputChange}
+          handleSelectedDepartmentChange={handleSelectedDepartmentChange}
+          selectedDepartment={selectedDepartment}
+          setSelectedDepartment={setSelectedDepartment}
+        />
+      </Container>
       <SaveButton type="submit">Save</SaveButton>
     </form>
   );

@@ -1,17 +1,20 @@
-import React, { useContext, useRef } from 'react';
+import React, {
+  useContext,
+  useImperativeHandle,
+  useState,
+  useRef,
+  forwardRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { EmployeesContext } from '../../utils/context';
 import { FieldSet } from '../../utils/style/Atoms';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/fr';
+import DatePicker from 'react-date-picker';
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
 
 function Employee({ handleValidate, handleInputChange }) {
-  /**
-   * Références vers les élément du DOM
-   */
-  const refFirstname = useRef();
-  const refLastname = useRef();
-  const refBirthDate = useRef();
-
   /**
    * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
    * qui peut être utilisée pour mettre à jour la variable d'état "formData".
@@ -20,10 +23,35 @@ function Employee({ handleValidate, handleInputChange }) {
    */
   const { formData, setFormData } = useContext(EmployeesContext);
 
+  /**
+   * Références vers les élément du DOM
+   */
+  const refFirstname = useRef();
+  const refLastname = useRef();
+
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleDateValidate = (event) => {
+    console.log('📆 handleValidate');
+  };
+
+  const handleDateChange = (date) => {
+    console.log('📆 handleDateChange');
+    let newValue = '';
+    setSelectedDate(date);
+    if (date !== null) {
+      newValue = dayjs(date).format('DD/MM/YYYY');
+    }
+    setFormData({
+      ...formData,
+      user: { ...formData.user, birthDate: newValue },
+    });
+  };
+
   return (
     <FieldSet>
       <legend>Employee</legend>
-      <div className="input-wrapper formData">
+      <div className=" formData">
         <label htmlFor="firstname">Firstname</label>
         <input
           type="text"
@@ -46,12 +74,13 @@ function Employee({ handleValidate, handleInputChange }) {
           onChange={(event) => handleInputChange(event, formData, setFormData)}
         />
       </div>
-      <div className="input-wrapper formData">
+      <div className=" formData">
         <label htmlFor="lastname">Lastname</label>
         <input
           type="text"
           id="lastname"
           name="lastname"
+          lastname="lastname"
           required
           className="text-control"
           minLength="2"
@@ -68,26 +97,20 @@ function Employee({ handleValidate, handleInputChange }) {
           onChange={(event) => handleInputChange(event, formData, setFormData)}
         />
       </div>
-      <div className="input-wrapper formData">
+      <div className=" formData">
         <label htmlFor="birthDate">Date of Birth</label>
-        <input
-          type="date"
+        <DatePicker
           id="birthDate"
           name="birthDate"
-          required
-          min="1931-01-01"
-          max={dayjs(new Date()).format('YYYY-MM-DD')}
-          ref={refBirthDate}
-          onBlur={(event) =>
-            handleValidate(event, refBirthDate, formData, setFormData)
-          }
-          onInvalid={(event) =>
-            handleValidate(event, refBirthDate, formData, setFormData)
-          }
-          onInput={(event) =>
-            handleValidate(event, refBirthDate, formData, setFormData)
-          }
-          onChange={(event) => handleInputChange(event, formData, setFormData)}
+          dayPlaceholder="jj"
+          monthPlaceholder="mm"
+          yearPlaceholder="aaaa"
+          value={selectedDate}
+          minDate={new Date('01/01/1901')}
+          maxDate={new Date()}
+          format="dd/MM/yyyy"
+          locale="fr"
+          onChange={(date) => handleDateChange(date)}
         />
       </div>
     </FieldSet>
