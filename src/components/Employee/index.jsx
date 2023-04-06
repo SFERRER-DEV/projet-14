@@ -1,7 +1,7 @@
 import React, {
   useContext,
+  useEffect,
   useImperativeHandle,
-  useState,
   useRef,
   forwardRef,
 } from 'react';
@@ -14,7 +14,14 @@ import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 
-function Employee({ handleValidate, handleInputChange }) {
+const Employee = forwardRef((props, ref) => {
+  const {
+    handleValidate,
+    handleInputChange,
+    selectedBirthDate,
+    setSelectedBirthDate,
+  } = props;
+
   /**
    * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
    * qui peut être utilisée pour mettre à jour la variable d'état "formData".
@@ -28,17 +35,22 @@ function Employee({ handleValidate, handleInputChange }) {
    */
   const refFirstname = useRef();
   const refLastname = useRef();
+  const refDatePicker = useRef();
 
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  const handleDateValidate = (event) => {
-    console.log('📆 handleValidate');
-  };
+  // Cette fonction expose la méthode Click() qui ouvre le calendrier
+  useImperativeHandle(ref, () => ({
+    onClick: () => {
+      refDatePicker.current
+        .querySelector('#birthDate')
+        .querySelector('.react-date-picker__calendar-button')
+        .click();
+    },
+  }));
 
   const handleDateChange = (date) => {
     console.log('📆 handleDateChange');
     let newValue = '';
-    setSelectedDate(date);
+    setSelectedBirthDate(date);
     if (date !== null) {
       newValue = dayjs(date).format('DD/MM/YYYY');
     }
@@ -48,10 +60,16 @@ function Employee({ handleValidate, handleInputChange }) {
     });
   };
 
+  useEffect(() => {
+    // sélectionner automatiquement la page qui contient aujourd'hui
+    if (selectedBirthDate === null) {
+    }
+  }, [selectedBirthDate]);
+
   return (
     <FieldSet>
       <legend>Employee</legend>
-      <div className=" formData">
+      <div className="formData">
         <label htmlFor="firstname">Firstname</label>
         <input
           type="text"
@@ -74,7 +92,7 @@ function Employee({ handleValidate, handleInputChange }) {
           onChange={(event) => handleInputChange(event, formData, setFormData)}
         />
       </div>
-      <div className=" formData">
+      <div className="formData">
         <label htmlFor="lastname">Lastname</label>
         <input
           type="text"
@@ -97,7 +115,7 @@ function Employee({ handleValidate, handleInputChange }) {
           onChange={(event) => handleInputChange(event, formData, setFormData)}
         />
       </div>
-      <div className=" formData">
+      <div className="formData" ref={refDatePicker}>
         <label htmlFor="birthDate">Date of Birth</label>
         <DatePicker
           id="birthDate"
@@ -105,7 +123,7 @@ function Employee({ handleValidate, handleInputChange }) {
           dayPlaceholder="jj"
           monthPlaceholder="mm"
           yearPlaceholder="aaaa"
-          value={selectedDate}
+          value={selectedBirthDate}
           minDate={new Date('01/01/1901')}
           maxDate={new Date()}
           format="dd/MM/yyyy"
@@ -115,11 +133,11 @@ function Employee({ handleValidate, handleInputChange }) {
       </div>
     </FieldSet>
   );
-}
+});
 
 Employee.propTypes = {
-  handleValidate: PropTypes.func.isRequired,
-  handleInputChange: PropTypes.func.isRequired,
+  // handleValidate: PropTypes.func.isRequired,
+  // handleInputChange: PropTypes.func.isRequired,
 };
 
 export default Employee;

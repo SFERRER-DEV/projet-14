@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { DropdownList } from 'basic-dropdown-list';
 import { EmployeesContext } from '../../utils/context';
@@ -21,17 +21,16 @@ const Wrapper = styled.div`
 `;
 
 function Enrollment({
-  handleValidate,
-  handleInputChange,
   handleSelectedDepartmentChange,
   selectedDepartment,
   setSelectedDepartment,
+  selectedStartDate,
+  setSelectedStartDate,
 }) {
   /**
-   * Références vers les élément du DOM
+   * Référence vers les élément du DOM
    */
-  const refStartDate = useRef();
-
+  const refDateStart = useRef();
   /**
    * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
    * qui peut être utilisée pour mettre à jour la variable d'état "formData".
@@ -40,7 +39,6 @@ function Enrollment({
    */
   const { formData, setFormData } = useContext(EmployeesContext);
 
-  const [selectedDate, setSelectedDate] = useState(formData.user.startDate);
   /**
    * Déclare une variable d'état 'departement' pour la liste de tous les départements et une fonction de mise à jour 'setDepartement'
    * qui peut être utilisée pour mettre à jour la variable d'état "list".
@@ -52,13 +50,20 @@ function Enrollment({
     setDepartment(newState);
   };
 
+  useEffect(() => {
+    // sélectionner automatiquement la page qui contient aujourd'hui
+    if (selectedStartDate === null) {
+      refDateStart.current.setActiveStartDate(dayjs().toDate());
+    }
+  }, [selectedStartDate]);
+
   const handleDateChange = (date) => {
     console.log('📆 handleDateChange');
-    setSelectedDate(dayjs(date).format('DD/MM/YYYY'));
     let newValue = '';
     if (date !== null) {
       newValue = dayjs(date).format('DD/MM/YYYY');
     }
+    setSelectedStartDate(newValue);
     setFormData({
       ...formData,
       user: { ...formData.user, startDate: newValue },
@@ -70,15 +75,17 @@ function Enrollment({
       <legend>Enrollment</legend>
       <Wrapper>
         <label htmlFor="startDate">Start Date</label>
+        <span>{selectedStartDate}</span>
         <Calendar
           id="startDate"
           name="startDate"
-          value={selectedDate}
+          value={selectedStartDate}
           minDate={new Date('01/01/1970')}
           maxDate={new Date()}
           format="dd/MM/yyyy"
           locale="fr"
           onChange={(date) => handleDateChange(date)}
+          ref={refDateStart}
         />
       </Wrapper>
       <DropdownList
@@ -101,12 +108,16 @@ function Enrollment({
   );
 }
 
+Enrollment.defaultProps = {
+  selectedStartDate: null,
+};
+
 Enrollment.propTypes = {
-  handleValidate: PropTypes.func.isRequired,
-  handleInputChange: PropTypes.func.isRequired,
   handleSelectedDepartmentChange: PropTypes.func.isRequired,
   selectedDepartment: PropTypes.string.isRequired,
   setSelectedDepartment: PropTypes.func.isRequired,
+  selectedStartDate: PropTypes.string,
+  setSelectedStartDate: PropTypes.func.isRequired,
 };
 
 export default Enrollment;

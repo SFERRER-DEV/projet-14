@@ -140,6 +140,7 @@ function FormCreate({ open, setOpen }) {
    * Références vers les élément du DOM
    */
   const refForm = useRef();
+  const refChild = useRef();
 
   /**
    * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
@@ -171,42 +172,58 @@ function FormCreate({ open, setOpen }) {
   const [selectedDepartment, setSelectedDepartment] = useState('');
 
   /**
+   *
+   */
+  const [selectedBirthDate, setSelectedBirthDate] = useState(null);
+
+  /**
+   *
+   */
+  const [selectedStartDate, setSelectedStartDate] = useState(
+    dayjs().format('DD/MM/YYYY')
+  );
+
+  /**
    * Fonction de gestionnaire d'événements pour la soumission du formulaire.
    * @param {Event} e - L'événement de soumission du formulaire.
    * @returns {void}
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, refChild) => {
     // Rester sur le formulaire
     e.preventDefault();
-    if (
-      refForm.current.checkValidity() &&
-      dayjs(formData.user.birthDate).isValid() &&
-      dayjs(formData.user.startDate).isValid()
-    ) {
+    if (refForm.current.checkValidity() && dayjs(selectedBirthDate).isValid()) {
       // ✅ Ajouter le nouvel utilisateur à la collection des utilisateurs
       setUsers([...users, formData.user]);
       // Ouvrir la modale;
       setOpen(true);
       // 🧹 Réinitialisation du formulaire
       refForm.current.reset();
-      // 🧽 Remise à blanc des listes du composant Dropdown
+      // 🧽 Remise à blanc des listes Dropdown et du DatePicker
       setSelectedFederal('');
       setSelectedDepartment('');
-      // 👍
-      console.log('Save User');
+      setSelectedBirthDate(null);
+      setSelectedStartDate(null);
+      console.log('Save User 👍');
     } else {
-      // 👎
       console.log('👎');
+      const isValidDate = dayjs(selectedBirthDate).isValid();
+      if (!isValidDate) {
+        // 👮‍♂️ Ouvrir le calendrier pour obliger la saisie de la date
+        refChild.current.onClick();
+      }
     }
   };
 
   return (
-    <form ref={refForm} onSubmit={(e) => handleSubmit(e)}>
+    <form ref={refForm} onSubmit={(e) => handleSubmit(e, refChild)}>
       <Container>
         {/* Employé */}
         <Employee
           handleValidate={handleValidate}
           handleInputChange={handleInputChange}
+          selectedBirthDate={selectedBirthDate}
+          setSelectedBirthDate={setSelectedBirthDate}
+          ref={refChild}
         />
         {/* Adresse */}
         <Address
@@ -218,11 +235,11 @@ function FormCreate({ open, setOpen }) {
         />
         {/* Embauche */}
         <Enrollment
-          handleValidate={handleValidate}
-          handleInputChange={handleInputChange}
           handleSelectedDepartmentChange={handleSelectedDepartmentChange}
           selectedDepartment={selectedDepartment}
           setSelectedDepartment={setSelectedDepartment}
+          selectedStartDate={selectedStartDate}
+          setSelectedStartDate={setSelectedStartDate}
         />
       </Container>
       <SaveButton type="submit">Save</SaveButton>
