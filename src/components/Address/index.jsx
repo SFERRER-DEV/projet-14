@@ -39,7 +39,7 @@ function Address({
   return (
     <FieldSet>
       <legend>Address</legend>
-      <div className="input-wrapper formData">
+      <div className=" formData">
         <label htmlFor="street">Street</label>
         <input
           type="text"
@@ -61,7 +61,7 @@ function Address({
           onChange={(event) => handleInputChange(event, formData, setFormData)}
         />
       </div>
-      <div className="input-wrapper formData">
+      <div className=" formData">
         <label htmlFor="city">City</label>
         <input
           type="text"
@@ -100,7 +100,7 @@ function Address({
         }
         selectedValue={selectedFederal}
       />
-      <div className="input-wrapper formData">
+      <div className=" formData">
         <label htmlFor="zipcode">Zip Code</label>
         <input
           type="text"

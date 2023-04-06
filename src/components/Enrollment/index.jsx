@@ -1,22 +1,36 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { DropdownList } from 'basic-dropdown-list';
 import { EmployeesContext } from '../../utils/context';
 import { FieldSet } from '../../utils/style/Atoms';
-import dayjs from 'dayjs';
+import styled from 'styled-components';
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/fr';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0.25em 0.5em;
+  & .react-calendar {
+    width: 100%;
+  }
+`;
 
 function Enrollment({
-  handleValidate,
-  handleInputChange,
   handleSelectedDepartmentChange,
   selectedDepartment,
   setSelectedDepartment,
+  selectedStartDate,
+  setSelectedStartDate,
 }) {
   /**
-   * Références vers les élément du DOM
+   * Référence vers les élément du DOM
    */
-  const refStartDate = useRef();
-
+  const refDateStart = useRef();
   /**
    * Déclare une variable d'état pour stocker les données du formulaire employé et une fonction de mise à jour 'setFormData'
    * qui peut être utilisée pour mettre à jour la variable d'état "formData".
@@ -36,32 +50,44 @@ function Enrollment({
     setDepartment(newState);
   };
 
+  useEffect(() => {
+    // sélectionner automatiquement la page qui contient aujourd'hui
+    if (selectedStartDate === null) {
+      refDateStart.current.setActiveStartDate(dayjs().toDate());
+    }
+  }, [selectedStartDate]);
+
+  const handleDateChange = (date) => {
+    console.log('📆 handleDateChange');
+    let newValue = '';
+    if (date !== null) {
+      newValue = dayjs(date).format('DD/MM/YYYY');
+    }
+    setSelectedStartDate(newValue);
+    setFormData({
+      ...formData,
+      user: { ...formData.user, startDate: newValue },
+    });
+  };
+
   return (
     <FieldSet>
       <legend>Enrollment</legend>
-      <div className="input-wrapper formData">
+      <Wrapper>
         <label htmlFor="startDate">Start Date</label>
-        <input
-          type="date"
+        <span>{selectedStartDate}</span>
+        <Calendar
           id="startDate"
           name="startDate"
-          required
-          min="1970-01-01"
-          value={dayjs(formData.user.startDate).format('YYYY-MM-DD')}
-          max={dayjs(new Date()).format('YYYY-MM-DD')}
-          ref={refStartDate}
-          onBlur={(event) =>
-            handleValidate(event, refStartDate, formData, setFormData)
-          }
-          onInvalid={(event) =>
-            handleValidate(event, refStartDate, formData, setFormData)
-          }
-          onInput={(event) =>
-            handleValidate(event, refStartDate, formData, setFormData)
-          }
-          onChange={(event) => handleInputChange(event, formData, setFormData)}
+          value={selectedStartDate}
+          minDate={new Date('01/01/1970')}
+          maxDate={new Date()}
+          format="dd/MM/yyyy"
+          locale="fr"
+          onChange={(date) => handleDateChange(date)}
+          ref={refDateStart}
         />
-      </div>
+      </Wrapper>
       <DropdownList
         name={'department'}
         labelText={'Department'}
@@ -82,12 +108,16 @@ function Enrollment({
   );
 }
 
+Enrollment.defaultProps = {
+  selectedStartDate: null,
+};
+
 Enrollment.propTypes = {
-  handleValidate: PropTypes.func.isRequired,
-  handleInputChange: PropTypes.func.isRequired,
   handleSelectedDepartmentChange: PropTypes.func.isRequired,
   selectedDepartment: PropTypes.string.isRequired,
   setSelectedDepartment: PropTypes.func.isRequired,
+  selectedStartDate: PropTypes.string,
+  setSelectedStartDate: PropTypes.func.isRequired,
 };
 
 export default Enrollment;

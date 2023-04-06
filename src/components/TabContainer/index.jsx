@@ -15,12 +15,12 @@ const TabButtonsContainer = styled.div`
 
 /** @type {Object} Un onglet s'affiche en cliquant sur une balise `<button>` */
 const TabButton = styled.button`
-  min-width: 16rem;
-  font-size: 1.25rem;
+  width: 16em;
+  font-size: 1.25em;
   font-weight: 600;
-  padding: 0.5rem;
-  margin: 0 0.25rem;
-  border-radius: 0.5rem 0.5rem 0 0;
+  padding: 0.5em;
+  margin: 0 0.25em;
+  border-radius: 0.5em 0.5em 0 0;
   background-color: ${(props) =>
     props.active ? colors.tertiary : colors.secondary};
   color: ${(props) =>

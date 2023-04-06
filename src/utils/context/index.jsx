@@ -22,6 +22,7 @@ const EmployeesProvider = (props) => {
    */
   const [department, setDepartment] = useState([{}]);
 
+  const today = dayjs(new Date()).format('DD/MM/YYYY'); // Aujourd'hui,
   /**
    * Un état local avec des valeurs initiales pour stocker les données de formulaire.
    * @typedef {Object} FormData
@@ -50,7 +51,7 @@ const EmployeesProvider = (props) => {
       city: '',
       federal: '',
       zipcode: '',
-      startDate: dayjs(new Date()).format('DD-MM-YYYY'), // Aujourd'hui,
+      startDate: today,
       department: 0,
     },
   });
@@ -61,7 +62,7 @@ const EmployeesProvider = (props) => {
    * @typedef {Array.<Object>} users - Un tableau d'objet utilisateur
    * @typedef {Function} setUsers - Cette fonction met à jour le State du tableau des utilisateurs
    */
-  let [users, setUsers] =  useState([]);
+  let [users, setUsers] = useState([]);
 
   const contextValue = {
     federal,

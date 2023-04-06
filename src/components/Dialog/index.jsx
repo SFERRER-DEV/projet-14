@@ -57,8 +57,8 @@ function FormDialog({ open, setOpen, activeTab, setActiveTab }) {
             {department.find((dep) => dep.id === formData.user.department)
               ?.name || ''}{' '}
             <br />
-            Start date:{' '}
-            {dayjs(formData.user.startDate).format('dddd D MMMM YYYY')}
+            Start date:
+            {formData.user.startDate}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

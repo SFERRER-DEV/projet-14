@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { EmployeesContext } from '../../utils/context';
 import styled from 'styled-components';
@@ -179,11 +179,6 @@ const Datatable = ({ columns }) => {
                             (dep) => dep.id === row.department
                           )?.name || ''
                         }
-                      </TableCell>
-                    ) : column.field === 'startDate' ||
-                      column.field === 'birthDate' ? (
-                      <TableCell key={column.field}>
-                        {dayjs(row[column.field]).format('DD-MM-YYYY')}
                       </TableCell>
                     ) : (
                       <TableCell key={column.field}>

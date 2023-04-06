@@ -9,10 +9,11 @@ import colors from './colors.js';
 export const FieldSet = styled.fieldset`
   display: flex;
   flex-direction: column;
-  flex-wrap: no-wrap;
-  width: 33%;
-  height: auto;
-  min-height: 100%;
+  flex-wrap: wrap;
+  flex-basis: 30%;
+  max-width: 50%;
+  flex-grow: 1;
+  margin: 0 0.5em;
   font-size: 1em;
   font-weight: 500;
   color: ${colors.textColor};
@@ -21,9 +22,10 @@ export const FieldSet = styled.fieldset`
     font-size: 1em;
     padding: 0.5em;
   }
+  height: 100%;
+  min-height: 25em;
   @media (max-width: 767px) {
     height: fit-content;
-    min-height: 12em;
-    width: 100%;
+    max-width: 100%;
   }
 `;
