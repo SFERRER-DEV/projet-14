@@ -23,6 +23,8 @@ const StyledGlobalStyle = createGlobalStyle`
       flex: 1 0 auto;
       display:flex;
       flex-direction: column;
+      height: 100%;
+      width: 100%;
       @media (max-width:767px) {
         font-size: 0.85rem;
       }
@@ -35,42 +37,24 @@ const StyledGlobalStyle = createGlobalStyle`
     article {
       padding-left: 2em;
       padding-right: 2em;
+      height: 100%;
+      width: 100%;
     }
 
     article > h2 {
       text-indent: 2em;
     }
 
-    button {
-      font-size: 1.25em;
-      font-weight: bold;
-      text-decoration: none;
-      color: #${colors.backgroundColor};
-      background-color: ${colors.primary};
-      border: none;
-      border-radius: 0.25em;
-      padding: 0.75em 1.5em;
-      margin: 0.5em 1em;
-      transition: background-color 0.3s ease;
-      &:hover {
-        background-color: ${colors.secondary};
-      }
-      cursor: pointer;
-    }
-
     form {
-      width: 100%;
-      height: 22em;
-      min-height:fit-content;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
       font-size: 1em;
       font-weight: 500;
       color:  ${colors.textColor};
       background-color: ${colors.backgroundColor};
+      height: 100%;
+      width: 100%;
     }
 
     .formData {
@@ -89,7 +73,6 @@ const StyledGlobalStyle = createGlobalStyle`
     .formData[data-error-visible='true'] .text-control {
       border: 2px solid ${colors.errorColor};
     }
-
 `;
 
 function GlobalStyle() {

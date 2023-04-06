@@ -15,7 +15,7 @@ Voir [un exemple d'utilisation](https://hrnet-basic-dropdown-list.vercel.app/) d
 
 ## Installation et lancement du Front-end (port 3000)
 
-Cloner le dépôt de Argent Bank Frontend : git clone https://github.com/SFERRER-DEV/projet-14.git
+Cloner le dépôt de HRnet : git clone https://github.com/SFERRER-DEV/projet-14.git
 
 Dans ce référentiel Front-end, installez les dépendances avec la commande yarn install
 

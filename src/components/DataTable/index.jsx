@@ -180,11 +180,6 @@ const Datatable = ({ columns }) => {
                           )?.name || ''
                         }
                       </TableCell>
-                    ) : column.field === 'startDate' ||
-                      column.field === 'birthDate' ? (
-                      <TableCell key={column.field}>
-                        {dayjs(row[column.field]).format('DD-MM-YYYY')}
-                      </TableCell>
                     ) : (
                       <TableCell key={column.field}>
                         {row[column.field]}
