@@ -96,11 +96,26 @@ const Datatable = ({ columns }) => {
   const sortedData = users.sort((a, b) => {
     if (sortConfig !== null) {
       const key = sortConfig.key;
-      if (a[key] < b[key]) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
-      }
-      if (a[key] > b[key]) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
+      switch (key) {
+        case 'startDate':
+        case 'birthDate':
+          const dateA = dayjs(a[key], 'DD/MM/YYYY');
+          const dateB = dayjs(b[key], 'DD/MM/YYYY');
+          if (dateA.isBefore(dateB)) {
+            return sortConfig.direction === 'asc' ? -1 : 1;
+          }
+          if (dateA.isAfter(dateB)) {
+            return sortConfig.direction === 'asc' ? 1 : -1;
+          }
+          break;
+        default:
+          if (a[key] < b[key]) {
+            return sortConfig.direction === 'asc' ? -1 : 1;
+          }
+          if (a[key] > b[key]) {
+            return sortConfig.direction === 'asc' ? 1 : -1;
+          }
+          break;
       }
     }
     return 0;
@@ -171,21 +186,23 @@ const Datatable = ({ columns }) => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => (
                 <TableRow key={1000 + index}>
-                  {columns.map((column) =>
-                    column.field === 'department' ? (
-                      <TableCell key={column.field}>
-                        {
-                          /** Jointure libellé */ department.find(
-                            (dep) => dep.id === row.department
-                          )?.name || ''
-                        }
-                      </TableCell>
-                    ) : (
-                      <TableCell key={column.field}>
-                        {row[column.field]}
-                      </TableCell>
-                    )
-                  )}
+                  {columns.map((column) => {
+                    switch (column.field) {
+                      case 'department':
+                        return (
+                          <TableCell key={column.field}>
+                            {department.find((dep) => dep.id === row.department)
+                              ?.name || ''}
+                          </TableCell>
+                        );
+                      default:
+                        return (
+                          <TableCell key={column.field}>
+                            {row[column.field]}
+                          </TableCell>
+                        );
+                    }
+                  })}
                 </TableRow>
               ))}
           </TableBody>
