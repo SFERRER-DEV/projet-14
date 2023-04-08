@@ -1,0 +1,134 @@
+[
+  {
+    "firstname": "Tony",
+    "lastname": "Stark",
+    "birthDate": "29/05/1970",
+    "street": "9826 Farms Road",
+    "city": "La Jolla",
+    "federal": "CA",
+    "zipcode": "902650",
+    "startDate": "11/06/2008",
+    "department": 3
+  },
+  {
+    "firstname": "Robert Bruce",
+    "lastname": "Banner",
+    "birthDate": "18/12/1969",
+    "street": "123 Main Street",
+    "city": "Manhattan",
+    "federal": "NY",
+    "zipcode": "880899",
+    "startDate": "12/09/2022",
+    "department": 4
+  },
+  {
+    "firstname": "Peter",
+    "lastname": "Parker",
+    "birthDate": "08/10/2001",
+    "street": "187 Chrysie Street",
+    "city": "Manhattan",
+    "federal": "NY",
+    "zipcode": "880897",
+    "startDate": "09/09/2013",
+    "department": 4
+  },
+  {
+    "firstname": "Peppers",
+    "lastname": "Potts",
+    "birthDate": "04/10/1972",
+    "street": "Glenadrienne",
+    "city": "Sandton\tRI",
+    "federal": "MN",
+    "zipcode": "219600",
+    "startDate": "30/09/2019",
+    "department": 5
+  },
+  {
+    "firstname": "Diana",
+    "lastname": "Prince",
+    "birthDate": "13/08/1933",
+    "street": "321 Main Street",
+    "city": "Olympus",
+    "federal": "AS",
+    "zipcode": "900960",
+    "startDate": "06/06/2006",
+    "department": 2
+  },
+  {
+    "firstname": "Clark Joseph",
+    "lastname": "Kent",
+    "birthDate": "18/04/1977",
+    "street": "Sullivan Place",
+    "city": "Metropolis DC",
+    "federal": "WY",
+    "zipcode": "778899",
+    "startDate": "02/02/1987",
+    "department": 5
+  },
+  {
+    "firstname": "Bruce",
+    "lastname": "Wayne",
+    "birthDate": "01/01/1931",
+    "street": "1007 Moutain Drive",
+    "city": "Gotham City",
+    "federal": "NY",
+    "zipcode": "880800",
+    "startDate": "13/09/1989",
+    "department": 1
+  },
+  {
+    "firstname": "Matt",
+    "lastname": "Murdock",
+    "birthDate": "01/04/1964",
+    "street": "Hell's Kitchen,",
+    "city": "New York",
+    "federal": "NY",
+    "zipcode": "880801",
+    "startDate": "04/07/1984",
+    "department": 1
+  },
+  {
+    "firstname": "Thor",
+    "lastname": "Odinson",
+    "birthDate": "15/08/1962",
+    "street": "Above Migard",
+    "city": "Asgard",
+    "federal": "NC",
+    "zipcode": "151212",
+    "startDate": "17/08/1983",
+    "department": 2
+  },
+  {
+    "firstname": "Scott",
+    "lastname": "Lang",
+    "birthDate": "26/01/1979",
+    "street": "123 Main street",
+    "city": "Coral Gables",
+    "federal": "FL",
+    "zipcode": "321321",
+    "startDate": "05/05/1995",
+    "department": 3
+  },
+  {
+    "firstname": "Stephen",
+    "lastname": "Strange",
+    "birthDate": "18/11/1963",
+    "street": "177A Bleecker Street",
+    "city": "Greenwich Village",
+    "federal": "NY",
+    "zipcode": "880821",
+    "startDate": "11/09/1993",
+    "department": 4
+  },
+  {
+    "firstname": "Steve",
+    "lastname": "Rogers",
+    "birthDate": "04/07/1932",
+    "street": "5th avenue",
+    "city": "Manhattan",
+    "federal": "NY",
+    "zipcode": "880822",
+    "startDate": "05/12/1947",
+    "department": 5
+  }
+]

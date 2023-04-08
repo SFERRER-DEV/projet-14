@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Tab1Content from '../Tab1Content';
 import Tab2Content from '../Tab2Content';
 import { EmployeesContext } from '../../utils/context';
+import { useFetchList } from '../../api';
 import colors from '../../utils/style/colors';
 
 /** @type {Object} Le conteneur des boutons est une balise `<div>` */
@@ -46,6 +47,9 @@ function TabContainer() {
     setActiveTab(tabIndex);
   };
 
+  // Récupérer les variables et fonctions utiles
+  const { jsonData, isDataLoading, error } = useFetchList('data/users.json');
+
   /**
    * Déclare une variable d'état 'users' pour la liste des utilisateurs et une fonction de mise à jour 'setUsers'
    * @typedef {Array.<Object>} users - Cette variable de State contient la liste des utilisateurs
@@ -55,10 +59,15 @@ function TabContainer() {
   useEffect(() => {
     const storedData = localStorage.getItem('hrnetfs_users');
     if (storedData) {
+      // Récupérer des données utilisateurs depuis le Web Storage
       setUsers(JSON.parse(storedData));
-      console.log('⏯');
+      console.log('💽');
+    } else if (!isDataLoading && !error && jsonData && jsonData.length > 0) {
+      // Récupérer des données utilisateurs à partir d'une url
+      setUsers(jsonData);
+      console.log('🌍');
     }
-  }, [setUsers]);
+  }, [jsonData, isDataLoading, error, setUsers]);
 
   return (
     <main>
