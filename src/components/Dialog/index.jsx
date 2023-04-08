@@ -20,7 +20,7 @@ function FormDialog({ open, setOpen, activeTab, setActiveTab }) {
     updateFormData.federal = '';
     updateFormData.zipcode = '';
     updateFormData.department = 0;
-    updateFormData.startDate = dayjs(new Date()).format('YYYY-MM-DD');
+    updateFormData.startDate = dayjs(new Date()).format('DD/MM/YYYY');
     setFormData({ ...formData, user: updateFormData });
     setOpen(false);
   };

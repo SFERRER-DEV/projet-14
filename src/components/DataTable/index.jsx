@@ -1,11 +1,13 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { EmployeesContext } from '../../utils/context';
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
+import colors from '../../utils/style/colors';
 import {
   Table,
   TableBody,
   TableCell,
+  tableCellClasses,
   TableContainer,
   TableHead,
   TableRow,
@@ -17,11 +19,35 @@ import {
 import dayjs from 'dayjs';
 
 // Style pour la zone de recherche/filtrage
-const FilterContainer = styled.div`
+const FilterContainer = styled('div')`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1em;
 `;
+
+// L'entête de la table
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: colors.primary,
+    color: colors.tertiary,
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 16,
+  },
+}));
+
+// Le style des lignes
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
 const Datatable = ({ columns }) => {
   /**
@@ -96,11 +122,26 @@ const Datatable = ({ columns }) => {
   const sortedData = users.sort((a, b) => {
     if (sortConfig !== null) {
       const key = sortConfig.key;
-      if (a[key] < b[key]) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
-      }
-      if (a[key] > b[key]) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
+      switch (key) {
+        case 'startDate':
+        case 'birthDate':
+          const dateA = dayjs(a[key], 'DD/MM/YYYY');
+          const dateB = dayjs(b[key], 'DD/MM/YYYY');
+          if (dateA.isBefore(dateB)) {
+            return sortConfig.direction === 'asc' ? -1 : 1;
+          }
+          if (dateA.isAfter(dateB)) {
+            return sortConfig.direction === 'asc' ? 1 : -1;
+          }
+          break;
+        default:
+          if (a[key] < b[key]) {
+            return sortConfig.direction === 'asc' ? -1 : 1;
+          }
+          if (a[key] > b[key]) {
+            return sortConfig.direction === 'asc' ? 1 : -1;
+          }
+          break;
       }
     }
     return 0;
@@ -150,7 +191,7 @@ const Datatable = ({ columns }) => {
           <TableHead>
             <TableRow>
               {columns.map((column) => (
-                <TableCell key={column.field}>
+                <StyledTableCell key={column.field} width={column.width}>
                   <TableSortLabel
                     active={sortConfig && sortConfig.key === column.field}
                     direction={
@@ -162,7 +203,7 @@ const Datatable = ({ columns }) => {
                   >
                     {column.headerName}
                   </TableSortLabel>
-                </TableCell>
+                </StyledTableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -170,23 +211,25 @@ const Datatable = ({ columns }) => {
             {filteredData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => (
-                <TableRow key={1000 + index}>
-                  {columns.map((column) =>
-                    column.field === 'department' ? (
-                      <TableCell key={column.field}>
-                        {
-                          /** Jointure libellé */ department.find(
-                            (dep) => dep.id === row.department
-                          )?.name || ''
-                        }
-                      </TableCell>
-                    ) : (
-                      <TableCell key={column.field}>
-                        {row[column.field]}
-                      </TableCell>
-                    )
-                  )}
-                </TableRow>
+                <StyledTableRow key={1000 + index}>
+                  {columns.map((column) => {
+                    switch (column.field) {
+                      case 'department':
+                        return (
+                          <TableCell key={column.field}>
+                            {department.find((dep) => dep.id === row.department)
+                              ?.name || ''}
+                          </TableCell>
+                        );
+                      default:
+                        return (
+                          <TableCell key={column.field}>
+                            {row[column.field]}
+                          </TableCell>
+                        );
+                    }
+                  })}
+                </StyledTableRow>
               ))}
           </TableBody>
         </Table>
