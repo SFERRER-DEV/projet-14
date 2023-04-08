@@ -14,15 +14,15 @@ function Tab2Content({ activeTab, setActiveTab }) {
    * @type {Column[]}
    */
   const columns = [
-    { field: 'firstname', headerName: 'First Name' },
-    { field: 'lastname', headerName: 'Last Name' },
-    { field: 'startDate', headerName: 'Start Date' },
-    { field: 'department', headerName: 'Department' },
-    { field: 'birthDate', headerName: 'Date of Birth' },
-    { field: 'street', headerName: 'Street' },
-    { field: 'city', headerName: 'City' },
-    { field: 'federal', headerName: 'State' },
-    { field: 'zipcode', headerName: 'Zip Code' },
+    { field: 'firstname', headerName: 'First Name', width: '10%' },
+    { field: 'lastname', headerName: 'Last Name', width: '10%' },
+    { field: 'startDate', headerName: 'Start Date', width: '10%' },
+    { field: 'department', headerName: 'Department', width: '15%' },
+    { field: 'birthDate', headerName: 'Date of Birth', width: '10%' },
+    { field: 'street', headerName: 'Street', width: '20%' },
+    { field: 'city', headerName: 'City', width: '10%' },
+    { field: 'federal', headerName: 'State', width: '5%' },
+    { field: 'zipcode', headerName: 'Zip Code', width: '10%' },
   ];
 
   return (
