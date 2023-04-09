@@ -168,7 +168,7 @@ const Datatable = ({ columns }) => {
    * Déclare une variable d'état 'filteredData' pour la liste des utilisateurs filtrés et une fonction de mise à jour 'setFilteredData'
    *
    * @typedef  {Array.<Object>} filteredData - Tableau qui contient les données filtrées
-   * @function {Function} setFilteredData - Fonction qui permet de modifier le tableau filteredData
+   * @typedef {Function} setFilteredData - Fonction qui permet de modifier le tableau filteredData
    */
   const [filteredData, setFilteredData] = useState([]);
 
