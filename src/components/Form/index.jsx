@@ -196,6 +196,10 @@ function FormCreate({ open, setOpen }) {
       setUsers([...users, formData.user]);
       // Ouvrir la modale;
       setOpen(true);
+      // 💾 Sauvegarder les utilisateurs dans le local storage
+      localStorage.setItem('hrnetfs_users', JSON.stringify(users));
+      console.log('💾');
+
       // 🧹 Réinitialisation du formulaire
       refForm.current.reset();
       // 🧽 Remise à blanc des listes Dropdown et du DatePicker

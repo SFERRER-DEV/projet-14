@@ -20,6 +20,31 @@ const Wrapper = styled.div`
   }
 `;
 
+/**
+ * Gère le changement de date sélectionnée et met à jour le formulaire et la date sélectionnée.
+ * @param {Date|null} date - La date sélectionnée, peut être nulle.
+ * @param {object} formData - L'état courant du formulaire.
+ * @param {function} setFormData - La fonction de mise à jour de l'état du formulaire.
+ * @param {function} setSelectedBirthDate - La fonction de mise à jour de la date sélectionnée.
+ * @returns {void}
+ */
+const handleDateChange = (
+  date,
+  formData,
+  setFormData,
+  setSelectedStartDate
+) => {
+  let newValue = '';
+  if (date !== null) {
+    newValue = dayjs(date).format('DD/MM/YYYY');
+  }
+  setSelectedStartDate(newValue);
+  setFormData({
+    ...formData,
+    user: { ...formData.user, startDate: newValue },
+  });
+};
+
 function Enrollment({
   handleSelectedDepartmentChange,
   selectedDepartment,
@@ -57,19 +82,6 @@ function Enrollment({
     }
   }, [selectedStartDate]);
 
-  const handleDateChange = (date) => {
-    console.log('📆 handleDateChange');
-    let newValue = '';
-    if (date !== null) {
-      newValue = dayjs(date).format('DD/MM/YYYY');
-    }
-    setSelectedStartDate(newValue);
-    setFormData({
-      ...formData,
-      user: { ...formData.user, startDate: newValue },
-    });
-  };
-
   return (
     <FieldSet>
       <legend>Enrollment</legend>
@@ -84,7 +96,9 @@ function Enrollment({
           maxDate={new Date()}
           format="dd/MM/yyyy"
           locale="fr"
-          onChange={(date) => handleDateChange(date)}
+          onChange={(date) =>
+            handleDateChange(date, formData, setFormData, setSelectedStartDate)
+          }
           ref={refDateStart}
         />
       </Wrapper>
