@@ -1,6 +1,5 @@
 import React, {
   useContext,
-  useEffect,
   useImperativeHandle,
   useRef,
   forwardRef,
@@ -13,6 +12,31 @@ import 'dayjs/locale/fr';
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
+
+/**
+ * Gère le changement de date sélectionnée et met à jour le formulaire et la date sélectionnée.
+ * @param {Date|null} date - La date sélectionnée, peut être nulle.
+ * @param {object} formData - L'état courant du formulaire.
+ * @param {function} setFormData - La fonction de mise à jour de l'état du formulaire.
+ * @param {function} setSelectedBirthDate - La fonction de mise à jour de la date sélectionnée.
+ * @returns {void}
+ */
+const handleDateChange = (
+  date,
+  formData,
+  setFormData,
+  setSelectedBirthDate
+) => {
+  let newValue = '';
+  setSelectedBirthDate(date);
+  if (date !== null) {
+    newValue = dayjs(date).format('DD/MM/YYYY');
+  }
+  setFormData({
+    ...formData,
+    user: { ...formData.user, birthDate: newValue },
+  });
+};
 
 const Employee = forwardRef((props, ref) => {
   const {
@@ -37,7 +61,7 @@ const Employee = forwardRef((props, ref) => {
   const refLastname = useRef();
   const refDatePicker = useRef();
 
-  // Cette fonction expose la méthode Click() qui ouvre le calendrier
+  // Cette fonction expose la méthode Click() qui ouvre le calendrier pour obliger la saisie d'une date de naissance
   useImperativeHandle(ref, () => ({
     onClick: () => {
       refDatePicker.current
@@ -46,25 +70,6 @@ const Employee = forwardRef((props, ref) => {
         .click();
     },
   }));
-
-  const handleDateChange = (date) => {
-    console.log('📆 handleDateChange');
-    let newValue = '';
-    setSelectedBirthDate(date);
-    if (date !== null) {
-      newValue = dayjs(date).format('DD/MM/YYYY');
-    }
-    setFormData({
-      ...formData,
-      user: { ...formData.user, birthDate: newValue },
-    });
-  };
-
-  useEffect(() => {
-    // sélectionner automatiquement la page qui contient aujourd'hui
-    if (selectedBirthDate === null) {
-    }
-  }, [selectedBirthDate]);
 
   return (
     <FieldSet>
@@ -128,7 +133,9 @@ const Employee = forwardRef((props, ref) => {
           maxDate={new Date()}
           format="dd/MM/yyyy"
           locale="fr"
-          onChange={(date) => handleDateChange(date)}
+          onChange={(date) =>
+            handleDateChange(date, formData, setFormData, setSelectedBirthDate)
+          }
         />
       </div>
     </FieldSet>
@@ -136,8 +143,10 @@ const Employee = forwardRef((props, ref) => {
 });
 
 Employee.propTypes = {
-  // handleValidate: PropTypes.func.isRequired,
-  // handleInputChange: PropTypes.func.isRequired,
+  handleValidate: PropTypes.func.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  selectedBirthDate: PropTypes.instanceOf(Date),
+  setSelectedBirthDate: PropTypes.func.isRequired,
 };
 
 export default Employee;

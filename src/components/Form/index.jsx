@@ -7,6 +7,7 @@ import Address from '../../components/Address';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 import colors from '../../utils/style/colors';
+import { useEffect } from 'react';
 
 const Container = styled.div`
   min-height: 25em;
@@ -160,31 +161,56 @@ function FormCreate({ open, setOpen }) {
   /**
    *État d'un élément sélectionné, avec une fonction pour mettre à jour l'état.
    * @typedef {string} selectedFederal - La valeur actuelle de l'élément sélectionné dans la liste.
-   * @typedef {function} setSelectedFederal - Une fonction pour mettre à jour l'état fédéral choisi.
+   * @typedef {Function} setSelectedFederal - Une fonction pour mettre à jour l'état fédéral choisi.
    */
   const [selectedFederal, setSelectedFederal] = useState('');
 
   /**
    * État de l'élément département sélectionné, avec une fonction pour mettre à jour l'état.
+   *
    * @typedef {string} selectedDepartment - La valeur actuelle de l'élément sélectionné dans la liste.
-   * @typedef {function} setSelectedDepartment - Une fonction pour mettre à jour le département choisi.
+   * @typedef {Function} setSelectedDepartment - Une fonction pour mettre à jour le département choisi.
    */
   const [selectedDepartment, setSelectedDepartment] = useState('');
 
   /**
+   * État de l'élément département sélectionné, avec une fonction pour mettre à jour l'état.
    *
+   *  @typedef {string} selectedBirthDate - la date de naissance n'est pas définie par défaut
+   *  @typedef {Function} setSelectedBirthDate - Une fonction pour mettre à jour le date de naissance choisie.
    */
   const [selectedBirthDate, setSelectedBirthDate] = useState(null);
 
   /**
+   *  Définir la date de début sélectionnée à la date actuelle au format 'DD/MM/YYYY'
    *
+   *  @typedef {string} selectedStartDate - la date de début
+   *  @typedef {Function} setSelectedStartDate - Une fonction pour mettre à jour la date de début choisie.
    */
   const [selectedStartDate, setSelectedStartDate] = useState(
     dayjs().format('DD/MM/YYYY')
   );
 
   /**
+   * Définir un flag pour sauver les utilisateurs dans le Web Storage
+   *
+   * @typedef {boolean} saveToStorage - Définit si les données doivent être sauvegardées ou non.
+   * @typedef {Function} setSaveToStorage - Fonction permettant de modifier la valeur de saveToStorage.
+   */
+  const [saveToStorage, setSaveToStorage] = useState(false);
+
+  useEffect(() => {
+    // 💾 Sauvegarder les utilisateurs dans le local storage
+    if (saveToStorage) {
+      localStorage.setItem('hrnetfs_users', JSON.stringify(users));
+      console.log('💾');
+      setSaveToStorage(false);
+    }
+  }, [saveToStorage, users]);
+
+  /**
    * Fonction de gestionnaire d'événements pour la soumission du formulaire.
+   *
    * @param {Event} e - L'événement de soumission du formulaire.
    * @returns {void}
    */
@@ -194,6 +220,7 @@ function FormCreate({ open, setOpen }) {
     if (refForm.current.checkValidity() && dayjs(selectedBirthDate).isValid()) {
       // ✅ Ajouter le nouvel utilisateur à la collection des utilisateurs
       setUsers([...users, formData.user]);
+      setSaveToStorage(true);
       // Ouvrir la modale;
       setOpen(true);
       // 🧹 Réinitialisation du formulaire
