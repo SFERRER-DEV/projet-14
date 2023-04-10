@@ -57,33 +57,61 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
  * @returns {void} -  Les objets du tableau en entrée sont triés sur place
  */
 const sortData = (users, sortConfig) => {
+  if (sortConfig === null) {
+    return;
+  }
+  const key = sortConfig.key;
   users.sort((a, b) => {
-    if (sortConfig !== null) {
-      const key = sortConfig.key;
-      switch (key) {
-        case 'startDate':
-        case 'birthDate':
-          const dateA = dayjs(a[key], 'DD/MM/YYYY');
-          const dateB = dayjs(b[key], 'DD/MM/YYYY');
-          if (dateA.isBefore(dateB)) {
-            return sortConfig.direction === 'asc' ? -1 : 1;
-          }
-          if (dateA.isAfter(dateB)) {
-            return sortConfig.direction === 'asc' ? 1 : -1;
-          }
-          break;
-        default:
-          if (a[key] < b[key]) {
-            return sortConfig.direction === 'asc' ? -1 : 1;
-          }
-          if (a[key] > b[key]) {
-            return sortConfig.direction === 'asc' ? 1 : -1;
-          }
-          break;
-      }
+    let ret = 0;
+    switch (key) {
+      case 'startDate':
+      case 'birthDate':
+        const dateA = dayjs(a[key], 'DD/MM/YYYY');
+        const dateB = dayjs(b[key], 'DD/MM/YYYY');
+        ret = compareDate(dateA, dateB, sortConfig.direction);
+        break;
+      default:
+        ret = compare(a[key], b[key], sortConfig.direction);
+        break;
     }
-    return 0;
+    return ret;
   });
+};
+
+/**
+ * Compare deux dates en fonction d'une direction donnée
+ *
+ * @param {Date} dateA La première date à comparer (dayjs)
+ * @param {Date} dateB La deuxième date à comparer (dayjs)
+ * @param {string} direction La direction de la comparaison ('asc' ou 'desc')
+ * @returns {number} -1 si la première date est avant la deuxième, 1 si elle est après, 0 si elles sont égales.
+ */
+const compareDate = (dateA, dateB, direction) => {
+  if (dateA.isBefore(dateB)) {
+    return direction === 'asc' ? -1 : 1;
+  } else if (dateA.isAfter(dateB)) {
+    return direction === 'asc' ? 1 : -1;
+  } else {
+    return 0;
+  }
+};
+
+/**
+ * Comparer deux valeurs et retourner leur ordre selon la direction spécifiée.
+ *
+ * @param {string} a La première valeur à comparer.
+ * @param {string} b La seconde valeur à comparer.
+ * @param {string} direction La direction dans laquelle comparer les valeurs ('asc' ou 'desc').
+ * @returns {number} -1 si a est plus petit que b, 1 si a est plus grand que b, 0 si a et b sont égaux.
+ */
+const compare = (a, b, direction) => {
+  if (a < b) {
+    return direction === 'asc' ? -1 : 1;
+  } else if (a > b) {
+    return direction === 'asc' ? 1 : -1;
+  } else {
+    return 0;
+  }
 };
 
 /**
@@ -168,7 +196,7 @@ const Datatable = ({ columns }) => {
    * Déclare une variable d'état 'filteredData' pour la liste des utilisateurs filtrés et une fonction de mise à jour 'setFilteredData'
    *
    * @typedef  {Array.<Object>} filteredData - Tableau qui contient les données filtrées
-   * @function {Function} setFilteredData - Fonction qui permet de modifier le tableau filteredData
+   * @typedef {Function} setFilteredData - Fonction qui permet de modifier le tableau filteredData
    */
   const [filteredData, setFilteredData] = useState([]);
 

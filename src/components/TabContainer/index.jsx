@@ -6,7 +6,10 @@ import { EmployeesContext } from '../../utils/context';
 import { useFetchList } from '../../api';
 import colors from '../../utils/style/colors';
 
-/** @type {Object} Le conteneur des boutons est une balise `<div>` */
+/**
+ * Le conteneur des boutons est une balise `<div>`
+ * @type {Object}
+ * */
 const TabButtonsContainer = styled.div`
   display: flex;
   width: 100%;
@@ -14,7 +17,10 @@ const TabButtonsContainer = styled.div`
   border-bottom: 3px solid ${colors.tertiary};
 `;
 
-/** @type {Object} Un onglet s'affiche en cliquant sur une balise `<button>` */
+/**
+ *  Un onglet s'affiche en cliquant sur une balise `<button>`
+ * @type {Object}
+ * */
 const TabButton = styled.button`
   width: 16em;
   font-size: 1.25em;

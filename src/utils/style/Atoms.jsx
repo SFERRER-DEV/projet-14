@@ -5,7 +5,11 @@ import colors from './colors.js';
  * Des composants de base - atomiques - réutilisables
  */
 
-/** @type {Object} Le conteneur d'un jeu de champs de formulaire est une balise `<fieldset>` */
+/**
+ * Le conteneur d'un jeu de champs de formulaire est une balise `<fieldset>`
+ *  @type {Object}
+ *
+ */
 export const FieldSet = styled.fieldset`
   display: flex;
   flex-direction: column;
@@ -23,7 +27,7 @@ export const FieldSet = styled.fieldset`
     padding: 0.5em;
   }
   height: 100%;
-  min-height: 25em;
+  min-height: 28em;
   @media (max-width: 767px) {
     height: fit-content;
     max-width: 100%;
