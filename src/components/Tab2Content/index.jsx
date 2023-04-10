@@ -10,7 +10,7 @@ function Tab2Content({ activeTab, setActiveTab }) {
    * @property {string} headerName - Titre de la colonne
    */
   /**
-   *Les colonnes à afficher dans la table
+   * Les colonnes à afficher dans la table
    * @type {Column[]}
    */
   const columns = [
