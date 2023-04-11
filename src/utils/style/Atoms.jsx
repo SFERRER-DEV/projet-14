@@ -6,10 +6,10 @@ import colors from './colors.js';
  */
 
 /**
- * Le conteneur d'un jeu de champs de formulaire est une balise `<fieldset>` 
+ * Le conteneur d'un jeu de champs de formulaire est une balise `<fieldset>`
  *  @type {Object}
  *
-*/
+ */
 export const FieldSet = styled.fieldset`
   display: flex;
   flex-direction: column;
