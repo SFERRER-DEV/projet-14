@@ -45,6 +45,47 @@ const handleDateChange = (
   });
 };
 
+/**
+ * @name publicHolidays
+ * @description Tableau contenant des objets Date représentant les jours fériés français.
+ * @type {Array<dayjs>}
+ */
+const publicHolidays = [
+  dayjs('01/01/1901'), // Jour de l'an
+  dayjs('05/01/1901'), // Fête du travail
+  dayjs('05/08/1901'), // Victoire 1945
+  dayjs('07/14/1901'), // Fête nationale
+  dayjs('08/15/1901'), // Assomption
+  dayjs('11/01/1901'), // Toussaint
+  dayjs('11/11/1901'), // Armistice 1918
+  dayjs('12/25/1901'), // Noël
+];
+
+/**
+ * Fonction qui désactive les jours fériés annuels dans les tuiles en vue mensuelle uniquement
+ *
+ * @param {Object} date - Date à vérifier.
+ * @param {String} view - Vue à vérifier.
+ * @returns {Boolean} - Retourne true si la date est désactivée, false sinon.
+ */
+function tileDisabled({ date, view }) {
+  // Ajouter une classe aux tuiles en vue mensuelle uniquement
+  if (view === 'month' && (date.getDay() === 0 || date.getDay() === 6)) {
+    // Vérifiez si une date que React-Calendar souhaite vérifier se situe dans l'une des plages
+    return true;
+  }
+  // Désactive les jours fériés annuels
+  if (
+    view === 'month' &&
+    publicHolidays.some(
+      (holiday) =>
+        dayjs(date).format('DD/MM') === dayjs(holiday).format('DD/MM')
+    )
+  ) {
+    return true;
+  }
+}
+
 function Enrollment({
   handleSelectedDepartmentChange,
   selectedDepartment,
@@ -78,16 +119,19 @@ function Enrollment({
   useEffect(() => {
     // sélectionner automatiquement la page qui contient aujourd'hui
     if (selectedStartDate === null) {
-      refDateStart.current.setActiveStartDate(dayjs().toDate());
+      const today = dayjs().toDate();
+      refDateStart.current.setActiveStartDate(today);
+      setSelectedStartDate(dayjs(today).format('DD/MM/YYYY'));
     }
-  }, [selectedStartDate]);
+  }, [selectedStartDate, setSelectedStartDate]);
 
   return (
     <FieldSet>
       <legend>Enrollment</legend>
       <Wrapper>
-        <label htmlFor="startDate">Start Date</label>
-        <span>{selectedStartDate}</span>
+        <label htmlFor="startDate">
+          Start Date : <span>{selectedStartDate}</span>
+        </label>
         <Calendar
           id="startDate"
           name="startDate"
@@ -100,6 +144,7 @@ function Enrollment({
             handleDateChange(date, formData, setFormData, setSelectedStartDate)
           }
           ref={refDateStart}
+          tileDisabled={tileDisabled}
         />
       </Wrapper>
       <DropdownList

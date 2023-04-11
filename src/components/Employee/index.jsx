@@ -80,7 +80,6 @@ const Employee = forwardRef((props, ref) => {
           type="text"
           id="firstname"
           name="firstname"
-          lastname="firstname"
           required
           className="text-control"
           minLength="2"
@@ -103,7 +102,6 @@ const Employee = forwardRef((props, ref) => {
           type="text"
           id="lastname"
           name="lastname"
-          lastname="lastname"
           required
           className="text-control"
           minLength="2"

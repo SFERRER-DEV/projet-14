@@ -187,9 +187,7 @@ function FormCreate({ open, setOpen }) {
    *  @typedef {string} selectedStartDate - la date de début
    *  @typedef {Function} setSelectedStartDate - Une fonction pour mettre à jour la date de début choisie.
    */
-  const [selectedStartDate, setSelectedStartDate] = useState(
-    dayjs().format('DD/MM/YYYY')
-  );
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
 
   /**
    * Définir un flag pour sauver les utilisateurs dans le Web Storage
